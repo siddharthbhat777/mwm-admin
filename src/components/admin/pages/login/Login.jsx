@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import classes from './Login.module.css';
 import { Link } from 'react-router-dom';
-import metLogo from '../../../assets/MET-logo.png';
+import metLogo from '../../../../assets/MET-logo.png';
 
 const Login = () => {
     const emailRef = useRef();

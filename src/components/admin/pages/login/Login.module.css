@@ -28,7 +28,7 @@
 
 
 .leftLayout {
-    background-image: url('../../../assets/login-image.jpg');
+    background-image: url('../../../../assets/login-image.jpg');
     background-repeat: no-repeat;
     background-position: left;
     background-size: cover;
