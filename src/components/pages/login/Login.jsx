@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import classes from './Login.module.css';
 import { Link } from 'react-router-dom';
+import metLogo from '../../../assets/MET-logo.png';
 
 const Login = () => {
     const emailRef = useRef();
@@ -31,6 +32,7 @@ const Login = () => {
                     <div className={classes.leftLayout} />
                     <div className={classes.rightLayout}>
                         <form className={classes.loginContainer} onSubmit={handleSubmit}>
+                            <img className={classes.metLogo} src={metLogo} alt='met-logo' />
                             <input className={classes.userInput} type="email" placeholder='Enter E-Mail address' ref={emailRef} />
                             <input className={classes.userInput} type="password" placeholder='Enter password' ref={passwordRef} />
                             <div className={classes.buttonsLogin}>

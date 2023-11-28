@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --login-background: #eeeeee;
+  --login-background: #000000;
   --button-medium-color: red;
   --button-light-color: #ff7070;
 }
