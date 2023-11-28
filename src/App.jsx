@@ -1,9 +1,10 @@
 import React from 'react';
 import Routers from './utils/Routers';
+import classes from './App.module.css';
 
 const App = () => {
   return (
-    <div className="App">
+    <div className={classes.app}>
       <Routers />
     </div>
   );
