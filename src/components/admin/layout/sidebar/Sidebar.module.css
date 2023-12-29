@@ -1,0 +1,109 @@
+.sidebar {
+    background-color: var(--darkest-gray-color);
+    border-right: 0.05rem solid var(--dark-gray-color);
+    display: grid;
+    grid-template-rows: 6% auto;
+    box-shadow: #0000001f 0rem 0.063rem 0.188rem, #0000003d 0rem 0.063rem 0.125rem;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 0.05rem solid var(--dark-gray-color);
+}
+
+.metLogo {
+    width: 100%;
+    height: 100%;
+}
+
+.sidebarContent {
+    display: grid;
+    grid-template-rows: auto 10%;
+}
+
+.topContent {
+    margin-top: 10%;
+}
+
+.bottomContent {
+    font-size: small;
+    color: gray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sidebarTab {
+    cursor: pointer;
+    display: flex;
+    color: white;
+    align-items: center;
+    padding-left: 1rem;
+    width: auto;
+    height: auto;
+}
+
+.sidebarTabText {
+    margin-left: 0.5rem;
+    font-size: medium;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.sidebarTab:hover .sidebarTabText {
+    font-weight: 500;
+}
+
+.sidebarTab:hover {
+    background-color: var(--darker-gray-color);
+    transition: all .2s ease-in-out;
+    transform-origin: 0% 50%;
+    transform: scale(1.02, 1.02);
+    -webkit-transform: scale(1.02, 1.02);
+    -moz-transform: scale(1.02, 1.02);
+}
+
+.sidebarTab:not(:hover) {
+    transition: all .2s ease-in-out;
+    transform: scale(1, 1);
+}
+
+@keyframes all {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.sidebarTabSelected {
+    color: var(--dark-component-color);
+    border-left: 0.2rem solid var(--dark-component-color);
+    background-color: var(--dark-gray-color);
+}
+
+.sidebarTabSelected h3 {
+    font-weight: 500;
+}
+
+.sidebarHeader {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+}
+
+.hrTag {
+    color: var(--light-gray-color);
+    width: 80%;
+}
+
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        display: none;
+    }
+}

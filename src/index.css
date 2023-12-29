@@ -5,7 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --darker-gray-color: #1f1f1f;
+  --darkest-gray-color: #1f1f1f;
+  --darker-gray-color: #2b2b2b;
   --dark-gray-color: #444444;
   --medium-gray-color: #979797;
   --light-gray-color: #e8e8e8;
