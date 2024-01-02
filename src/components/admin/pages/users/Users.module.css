@@ -1,0 +1,36 @@
+.outletScreen {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 10% 90%;
+    background-color: blueviolet;
+}
+
+.tableLayout {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 90% auto;
+}
+
+.mainLayout {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.mainLayout::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.mainLayout::-webkit-scrollbar-thumb {
+    border-radius: 1rem;
+    background-color: var(--darkest-gray-color);
+}
+
+.mainLayout::-webkit-scrollbar-track {
+    border-radius: 1rem;
+    background-color: var(--dark-gray-color);
+}
+
+.bottomLayout {
+    background-color: violet;
+}
