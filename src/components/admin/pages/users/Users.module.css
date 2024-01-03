@@ -25,7 +25,7 @@
     height: 100%;
     display: grid;
     border-radius: 1rem;
-    grid-template-rows: 8% 1rem auto 0rem 15%;
+    grid-template-rows: 6% 1rem auto 0rem 10%;
 }
 
 .tableTopOffCreate {
@@ -88,12 +88,6 @@
     background: var(--light-button-color);
 }
 
-.createButtonContainer {
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-}
-
 .searchBox {
     position: relative;
     margin-left: 1rem;
@@ -109,7 +103,7 @@
 .searchIcon {
     position: absolute;
     top: 50%;
-    left: 1.6%;
+    left: 1%;
     transform: translateY(-50%);
     fill: #333;
     width: 1rem;
@@ -132,7 +126,7 @@
 }
 
 .tableContainer {
-    height: 58.5vh;
+    height: 100%;
     overflow-y: auto;
 }
 
@@ -421,51 +415,22 @@
 
 @media screen and (max-width: 480px) {
     .mainListContainer {
-        grid-template-rows: 20% 1rem auto;
+        grid-template-rows: 10% 1rem auto;
         padding-bottom: 0rem;
+    }
+
+    .tableContainer {
+        height: 80vh;
     }
 
     .tableTopOffCreate {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         padding-inline: 0.2rem;
         margin-bottom: 0rem;
         gap: 1rem;
-    }
-
-    .topCreateButton {
-        height: 8vh;
-        min-width: 90%;
-    }
-
-    .mainCreateContainer {
-        height: 79.35vh;
-    }
-
-    .formLayoutContainer {
-        margin-top: 6vh;
-    }
-
-    .formContainer {
-        gap: 0.5rem;
-    }
-
-    .smallerInputSize {
-        width: 20vw;
-    }
-
-    .smallInputSize {
-        width: 30.5vw;
-    }
-
-    .mediumInputSize {
-        width: 40.5vw;
-    }
-
-    .largeInputSize {
-        width: 70vw;
-        resize: none;
     }
 
     .detailsViewContainer {
@@ -474,6 +439,8 @@
     }
 
     .searchBox {
+        display: flex;
+        align-items: center;
         margin-left: 0rem;
         margin-right: 0rem;
         width: 90%;
@@ -481,6 +448,7 @@
 
     .searchIcon {
         top: 40%;
+        left: 5%;
     }
 
     .searchInput {
