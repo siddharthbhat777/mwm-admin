@@ -1,0 +1,12 @@
+.paginationToggleButtons {
+    cursor: pointer;
+    display: flex;
+    gap: 1rem;
+    stroke: var(--dark-component-color);
+    color: var(--dark-component-color);
+}
+
+.disabledButton {
+    stroke: var(--light-component-color);
+    color: var(--light-component-color);
+}

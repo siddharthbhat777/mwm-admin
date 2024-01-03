@@ -1,7 +1,6 @@
 .mainTable {
     width: 100%;
     border-collapse: collapse;
-    background-color: var(--dark-gray-color);
     color: white;
 }
 
@@ -18,7 +17,7 @@
 }
 
 .mainTable tbody tr {
-    height: 3rem;
+    height: 2.5rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     transition: all 0.2s ease-in-out;
@@ -31,7 +30,7 @@
 }
 
 .selectedRow {
-    background-color: var(--darker-gray-color) !important;
+    background-color: var(--dark-gray-color) !important;
     color: white !important;
     font-weight: 600;
 }
