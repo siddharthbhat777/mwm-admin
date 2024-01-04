@@ -208,8 +208,8 @@ const usersList = [
 const Users = () => {
     const location = useLocation();
     const [openDetails, setOpenDetails] = useState(false);
-    const [requisitions, setRequisitions] = useState([]);
-    const [filteredRequisitions, setFilteredRequisitions] = useState([]);
+    const [data, setData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
     const [showLoader, setShowLoader] = useState(false);
     const [refreshList, setRefreshList] = useState(false);
     const [selectedRowData, setSelectedRowData] = useState(null);
@@ -217,7 +217,7 @@ const Users = () => {
     const [numberOfRows, setNumberOfRows] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
 
-    const totalPageCount = Math.ceil(filteredRequisitions.length / numberOfRows);
+    const totalPageCount = Math.ceil(filteredData.length / numberOfRows);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -236,30 +236,30 @@ const Users = () => {
     }, [location]);
 
     useEffect(() => {
-        const filteredData = requisitions.filter((requisition) => {
+        const filteredData = data.filter((requisition) => {
             const searchFields = ['firstname', 'lastname', 'email', 'institute', 'year'];
             return searchFields.some((field) =>
                 String(requisition[field]).toLowerCase().includes(searchQuery.toLowerCase())
             );
         });
         if (filteredData.length !== 0) {
-            setFilteredRequisitions(filteredData);
+            setFilteredData(filteredData);
         } else {
             if (searchQuery.length === 0) {
-                setFilteredRequisitions(requisitions);
+                setFilteredData(data);
             } else {
-                setFilteredRequisitions([]);
+                setFilteredData([]);
             }
         }
-    }, [requisitions, searchQuery]);
+    }, [data, searchQuery]);
 
     const startIndex = (currentPage - 1) * numberOfRows;
-    const endIndex = Math.min(startIndex + numberOfRows, requisitions.length);
+    const endIndex = Math.min(startIndex + numberOfRows, data.length);
     let displayedData;
     if (window.innerWidth > 480) {
-        displayedData = filteredRequisitions.slice(startIndex, endIndex);
+        displayedData = filteredData.slice(startIndex, endIndex);
     } else {
-        displayedData = filteredRequisitions;
+        displayedData = filteredData;
     }
 
     useEffect(() => {
@@ -268,7 +268,7 @@ const Users = () => {
         const gettingRequisitions = async () => {
             try {
                 // const requisitions = await axios.get('http://localhost:8001/api/purchase/requisition/');
-                setRequisitions(usersList);
+                setData(usersList);
             } catch (error) {
                 if (error.response) {
                     if (error.response.status === 500) {
@@ -333,7 +333,7 @@ const Users = () => {
                         </div>
                         {window.innerWidth > 480 && <hr className={classes.tableDivideLine} />}
                         <div className={classes.bottomContainer}>
-                            <Pagination rowsPerPage={handleRowsPerPage} startIndex={endIndex > 0 ? (startIndex + 1) : 0} endIndex={endIndex} numberOfRows={filteredRequisitions.length} currentPage={currentPage} totalPageCount={totalPageCount} onPageChange={handlePageChange} />
+                            <Pagination rowsPerPage={handleRowsPerPage} startIndex={endIndex > 0 ? (startIndex + 1) : 0} endIndex={endIndex} numberOfRows={filteredData.length} currentPage={currentPage} totalPageCount={totalPageCount} onPageChange={handlePageChange} />
                         </div>
                     </div>
             </div>
@@ -386,8 +386,15 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.details}>
                     <span>Key fields</span>
                     <hr className={classes.detailsSectionHr} />
-                    <div><header className={classes.detailsData}>Requisition date: </header><data>{formatDateTime(detailsData.createdAt)}</data></div>
-                    <div><header className={classes.detailsData}>Requisition number: </header><data>{detailsData.firstname}</data></div>
+                    <div><header className={classes.detailsData}>User creation date: </header><data>{formatDateTime(detailsData.createdAt)}</data></div>
+                    <div><header className={classes.detailsData}>Name: </header><data>{detailsData.firstname + ' ' + detailsData.lastname}</data></div>
+                    <div><header className={classes.detailsData}>Username: </header><data>{detailsData.username}</data></div>
+                    <div><header className={classes.detailsData}>GR Number: </header><data>{detailsData.gr_number}</data></div>
+                    <div><header className={classes.detailsData}>Year: </header><data>{detailsData.year}</data></div>
+                    <div><header className={classes.detailsData}>E-Mail: </header><data>{detailsData.email}</data></div>
+                    <div><header className={classes.detailsData}>Phone: </header><data>{detailsData.phone}</data></div>
+                    <div><header className={classes.detailsData}>Institute: </header><data>{detailsData.institute}</data></div>
+                    <div><header className={classes.detailsData}>Program: </header><data>{detailsData.program}</data></div>
                 </motion.div>
             </div>
         </motion.div>
