@@ -309,33 +309,33 @@ const Users = () => {
     return (
         <div className={classes.fullScreen}>
             <div className={window.innerWidth > 480 ? classes.main : (openDetails ? classes.offmain : classes.main)}>
-                    <div className={classes.mainListContainer}>
-                        <div className={classes.tableTopOffCreate}>
-                            <div className={classes.searchBox}>
-                                <div className={classes.searchIcon}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                    </svg>
-                                </div>
-                                <input type='text' placeholder='Search here' className={classes.searchInput} onChange={(e) => setSearchQuery(e.target.value)} />
+                <div className={classes.mainListContainer}>
+                    <div className={classes.tableTopOffCreate}>
+                        <div className={classes.searchBox}>
+                            <div className={classes.searchIcon}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
                             </div>
-                        </div>
-                        <hr className={classes.tableDivideLine} />
-                        <div className={classes.tableContainer}>
-                            {
-                                showLoader &&
-                                <Loader />
-                            }
-                            {
-                                !showLoader &&
-                                <Table rows={displayedData} columns={columns} isRowSelected={openDetails} selectedRow={handleSelectedRow} />
-                            }
-                        </div>
-                        {window.innerWidth > 480 && <hr className={classes.tableDivideLine} />}
-                        <div className={classes.bottomContainer}>
-                            <Pagination rowsPerPage={handleRowsPerPage} startIndex={endIndex > 0 ? (startIndex + 1) : 0} endIndex={endIndex} numberOfRows={filteredData.length} currentPage={currentPage} totalPageCount={totalPageCount} onPageChange={handlePageChange} />
+                            <input type='text' placeholder='Search here' className={classes.searchInput} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
                     </div>
+                    <hr className={classes.tableDivideLine} />
+                    <div className={classes.tableContainer}>
+                        {
+                            showLoader &&
+                            <Loader />
+                        }
+                        {
+                            !showLoader &&
+                            <Table rows={displayedData} columns={columns} isRowSelected={openDetails} selectedRow={handleSelectedRow} />
+                        }
+                    </div>
+                    {window.innerWidth > 480 && <hr className={classes.tableDivideLine} />}
+                    <div className={classes.bottomContainer}>
+                        <Pagination rowsPerPage={handleRowsPerPage} startIndex={endIndex > 0 ? (startIndex + 1) : 0} endIndex={endIndex} numberOfRows={filteredData.length} currentPage={currentPage} totalPageCount={totalPageCount} onPageChange={handlePageChange} />
+                    </div>
+                </div>
             </div>
             <AnimatePresence>
                 {
@@ -395,6 +395,19 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                     <div><header className={classes.detailsData}>Phone: </header><data>{detailsData.phone}</data></div>
                     <div><header className={classes.detailsData}>Institute: </header><data>{detailsData.institute}</data></div>
                     <div><header className={classes.detailsData}>Program: </header><data>{detailsData.program}</data></div>
+                </motion.div>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.modifyButtons}>
+                    <button className={classes.editButton}>Edit &nbsp;
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-person-fill-gear" viewBox="0 0 16 16">
+                            <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4m9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
+                        </svg>
+                    </button>
+                    <button className={classes.deleteButton}>Delete &nbsp;
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-person-fill-x" viewBox="0 0 16 16">
+                            <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4" />
+                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
+                        </svg>
+                    </button>
                 </motion.div>
             </div>
         </motion.div>
