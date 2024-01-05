@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classes from './Users.module.css';
 import { AnimatePresence, motion } from 'framer-motion';
 import Loader from '../../../ui/loader/Loader';
 import Table from '../../../ui/table/Table';
 import Pagination from '../../../ui/table/pagination/Pagination';
 import { useLocation } from 'react-router-dom';
+import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
+import CustomDropdown from '../../../ui/customDropdown/CustomDropdown';
 
 const usersList = [
     {
@@ -221,6 +223,7 @@ const usersList = [
 
 const Users = () => {
     const location = useLocation();
+    const [openCreate, setOpenCreate] = useState(false);
     const [openDetails, setOpenDetails] = useState(false);
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
@@ -245,6 +248,7 @@ const Users = () => {
     useEffect(() => {
         if (location.state) {
             setOpenDetails(true);
+            setOpenCreate(false);
             setSelectedRowData(location.state.requisitionData)
         }
     }, [location]);
@@ -315,41 +319,67 @@ const Users = () => {
         { field: 'year', header: 'Year' }
     ];
 
+    const handleOpenCreate = () => {
+        setOpenDetails(false);
+        setOpenCreate(true);
+    };
+
     const handleSelectedRow = (row) => {
+        setOpenCreate(false);
         setOpenDetails(true);
         setSelectedRowData(row);
     };
 
     return (
         <div className={classes.fullScreen}>
-            <div className={window.innerWidth > 480 ? classes.main : (openDetails ? classes.offmain : classes.main)}>
-                <div className={classes.mainListContainer}>
-                    <div className={classes.tableTopOffCreate}>
-                        <div className={classes.searchBox}>
-                            <div className={classes.searchIcon}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                </svg>
+            <AnimatePresence>
+                {
+                    openCreate &&
+                    <CreateComponent setOpenCreate={setOpenCreate} setRefreshList={setRefreshList} />
+                }
+            </AnimatePresence>
+            <div className={window.innerWidth > 480 ? classes.main : ((openCreate || openDetails) ? classes.offmain : classes.main)}>
+                {
+                    (window.innerWidth > 480 ? true : !openCreate) &&
+                    <div className={classes.mainListContainer}>
+                        <div className={openCreate ? classes.tableTopOnCreate : classes.tableTopOffCreate}>
+                            {
+                                !openCreate &&
+                                <button className={classes.topCreateButton} onClick={handleOpenCreate}>
+                                    <div className={classes.createButtonContainer}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                                            <path stroke='#fff' strokeWidth='0.5' fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                                        </svg>
+                                        <span>Create</span>
+                                    </div>
+                                </button>
+                            }
+                            <div className={openCreate ? classes.searchBoxOnCreate : classes.searchBox}>
+                                <div className={classes.searchIcon}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                    </svg>
+                                </div>
+                                <input type='text' placeholder='Search here' className={classes.searchInput} onChange={(e) => setSearchQuery(e.target.value)} />
                             </div>
-                            <input type='text' placeholder='Search here' className={classes.searchInput} onChange={(e) => setSearchQuery(e.target.value)} />
+                        </div>
+                        <hr className={classes.tableDivideLine} />
+                        <div className={classes.tableContainer}>
+                            {
+                                showLoader &&
+                                <Loader />
+                            }
+                            {
+                                !showLoader &&
+                                <Table rows={displayedData} columns={columns} isRowSelected={openDetails} selectedRow={handleSelectedRow} />
+                            }
+                        </div>
+                        {window.innerWidth > 480 && <hr className={classes.tableDivideLine} />}
+                        <div className={classes.bottomContainer}>
+                            <Pagination rowsPerPage={handleRowsPerPage} startIndex={endIndex > 0 ? (startIndex + 1) : 0} endIndex={endIndex} numberOfRows={filteredData.length} currentPage={currentPage} totalPageCount={totalPageCount} onPageChange={handlePageChange} />
                         </div>
                     </div>
-                    <hr className={classes.tableDivideLine} />
-                    <div className={classes.tableContainer}>
-                        {
-                            showLoader &&
-                            <Loader />
-                        }
-                        {
-                            !showLoader &&
-                            <Table rows={displayedData} columns={columns} isRowSelected={openDetails} selectedRow={handleSelectedRow} />
-                        }
-                    </div>
-                    {window.innerWidth > 480 && <hr className={classes.tableDivideLine} />}
-                    <div className={classes.bottomContainer}>
-                        <Pagination rowsPerPage={handleRowsPerPage} startIndex={endIndex > 0 ? (startIndex + 1) : 0} endIndex={endIndex} numberOfRows={filteredData.length} currentPage={currentPage} totalPageCount={totalPageCount} onPageChange={handlePageChange} />
-                    </div>
-                </div>
+                }
             </div>
             <AnimatePresence>
                 {
@@ -362,6 +392,163 @@ const Users = () => {
 };
 
 export default Users;
+
+const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
+    const requisitionNumberRef = useRef();
+    const usernameRef = useRef();
+    const descriptionRef = useRef();
+    const purposeRef = useRef();
+
+    const [department, setDepartment] = useState('');
+    const [category, setCategory] = useState('');
+    const [quantity, setQuantity] = useState(null);
+    const [purchaseType, setPurchaseType] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState(null);
+    const [hardwareAssetData, setHardwareAssetData] = useState([]);
+    const [softwareAssetData, setSoftwareAssetData] = useState([]);
+    const [hardwareAssetOptions, setHardwareAssetOptions] = useState([]);
+    const [softwareAssetOptions, setSoftwareAssetOptions] = useState([]);
+
+    const departmentDropdownOptions = ['ERP', 'MARCOM', 'Management', 'HR'];
+    const categoryDropdownOptions = ['Software', 'Hardware'];
+    const purchaseTypeDropdownOptions = ['NEW', 'AMC'];
+
+    /* useEffect(() => {
+        if (quantity) {
+            if (category.toLowerCase() === 'hardware') {
+                setHardwareAssetData(Array(quantity).fill(null).map(() => ({ assetId: uniqueId(), assetName: '', company: '', speed: '', hardwareType: '', capacity: '' })));
+            } else if (category.toLowerCase() === 'software') {
+                setSoftwareAssetData(Array(quantity).fill(null).map(() => ({ assetId: uniqueId(), assetName: '', softwareType: '', softwareVersion: '', edition: '', build: '', licenseType: '', systemType: '' })));
+            }
+        }
+    }, [quantity, category]);
+
+    useEffect(() => {
+        const getHardwares = async () => {
+            try {
+                const hardwares = await axios.get('http://localhost:8001/api/modify_data/hardware');
+                setHardwareAssetOptions(hardwares.data.hardware.map(hardware => hardware.hardwareName));
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+        const getSoftwares = async () => {
+            try {
+                const softwares = await axios.get('http://localhost:8001/api/modify_data/software');
+                setSoftwareAssetOptions(softwares.data.software.map(software => software.softwareName));
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+        getHardwares();
+        getSoftwares();
+    }, []); */
+
+    const handleShowAlert = (header, submessage) => {
+        setAlertMessage({ header: header, submessage: submessage });
+        setShowAlert(true);
+    };
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+    };
+
+    const handleDepartmentSelect = (value) => {
+        setDepartment(value);
+    };
+
+    const handleCategorySelect = (value) => {
+        setCategory(value);
+    };
+
+    const handlePurchaseTypeSelect = (value) => {
+        setPurchaseType(value);
+    };
+
+    const handleCreateSubmit = async (event) => {
+        event.preventDefault();
+        /* const selectedData = () => {
+            if (category.toLowerCase() === 'hardware') {
+                return hardwareAssetData;
+            } else if (category.toLowerCase() === 'software') {
+                return softwareAssetData;
+            }
+        };
+        const data = {
+            requisitionData: {
+                requisitionNumber: requisitionNumberRef.current.value,
+                username: usernameRef.current.value,
+                department: department,
+                category: category.toLowerCase(),
+                assetData: selectedData(),
+                description: descriptionRef.current.value,
+                quantity: quantity,
+                purchaseType: purchaseType,
+                purpose: purposeRef.current.value
+            }
+        };
+        try {
+            if (!requisitionNumberRef.current.value) {
+                const error = new Error('Please enter required field');
+                error.statusCode = 422;
+                throw error;
+            }
+            await axios.post('http://localhost:8001/api/purchase/requisition/createrequisition', data);
+            setRefreshList(true);
+            setOpenCreate(false);
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 409) {
+                    handleShowAlert('Invalid input', error.response.data.message);
+                } else if (error.response.status === 500) {
+                    handleShowAlert('Server error', 'Something went wrong');
+                } else {
+                    console.log(error.message);
+                }
+            } else {
+                if (error.statusCode === 422) {
+                    handleShowAlert('Invalid input', error.message);
+                } else {
+                    console.log(error.message);
+                }
+            }
+        } */
+    };
+
+    return (
+        <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.3 }} className={classes.mainCreateContainer}>
+            {
+                showAlert &&
+                <OKAlert message={alertMessage} onClose={handleCloseAlert} />
+            }
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.closeButtonContainer} onClick={() => setOpenCreate(false)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                </svg>
+            </motion.div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.formLayoutContainer}>
+                <form method='POST' className={classes.formContainer} onSubmit={(e) => handleCreateSubmit(e)}>
+                    <div className={classes.formRowContainer}>
+                        <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Requisition number' ref={requisitionNumberRef} />
+                        <input type='text' className={`${classes.formInput} ${classes.mediumInputSize}`} placeholder='Username' ref={usernameRef} />
+                    </div>
+                    <div className={classes.formRowContainer} style={{ zIndex: 2 }}>
+                        <CustomDropdown defaultText={'Department'} options={departmentDropdownOptions} onSelect={handleDepartmentSelect} />{/* Dropdown */}
+                        <CustomDropdown defaultText={'Category'} options={categoryDropdownOptions} onSelect={handleCategorySelect} />{/* Dropdown */}
+                    </div>
+                    <div className={classes.formRowContainer}>
+                        <input type='number' min={0} className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Quantity' onChange={(e) => setQuantity(+e.target.value)} />
+                        <CustomDropdown defaultText={'Purchase type'} options={purchaseTypeDropdownOptions} onSelect={handlePurchaseTypeSelect} />{/* Dropdown */}
+                    </div>
+                    <textarea rows='3' cols='10' className={`${classes.formInput} ${classes.largeInputSize}`} placeholder='Description' ref={descriptionRef} />
+                    <textarea rows='3' cols='10' className={`${classes.formInput} ${classes.largeInputSize}`} placeholder='Purpose' ref={purposeRef} />
+                    <button type='submit' className={classes.createButton}>Create</button>
+                </form>
+            </motion.div>
+        </motion.div>
+    );
+};
 
 const DetailsView = ({ setOpenDetails, detailsData }) => {
     const formatDateTime = (createdAt) => {
@@ -398,7 +585,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                     </svg>
                 </motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.details}>
-                    <span>Key fields</span>
+                    <span>User Details</span>
                     <hr className={classes.detailsSectionHr} />
                     <div><header className={classes.detailsData}>User creation date: </header><data>{formatDateTime(detailsData.createdAt)}</data></div>
                     <div><header className={classes.detailsData}>Name: </header><data>{detailsData.firstname + ' ' + detailsData.lastname}</data></div>
