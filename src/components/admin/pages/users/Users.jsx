@@ -405,10 +405,10 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const [purchaseType, setPurchaseType] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState(null);
-    const [hardwareAssetData, setHardwareAssetData] = useState([]);
-    const [softwareAssetData, setSoftwareAssetData] = useState([]);
-    const [hardwareAssetOptions, setHardwareAssetOptions] = useState([]);
-    const [softwareAssetOptions, setSoftwareAssetOptions] = useState([]);
+    // const [hardwareAssetData, setHardwareAssetData] = useState([]);
+    // const [softwareAssetData, setSoftwareAssetData] = useState([]);
+    // const [hardwareAssetOptions, setHardwareAssetOptions] = useState([]);
+    // const [softwareAssetOptions, setSoftwareAssetOptions] = useState([]);
 
     const departmentDropdownOptions = ['ERP', 'MARCOM', 'Management', 'HR'];
     const categoryDropdownOptions = ['Software', 'Hardware'];
