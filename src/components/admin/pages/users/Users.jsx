@@ -16,9 +16,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -30,9 +31,10 @@ const usersList = [
         phone: 9765474787,
         email: 'ruchi4gana@gmail.com',
         institute: 'IOM',
-        program: 'MMS',
-        gr_number: '6745378523458',
+        programme: 'MMS',
+        gr_no: '6745378523458',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -44,9 +46,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -58,9 +61,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -72,9 +76,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -86,9 +91,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -100,9 +106,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -114,9 +121,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -128,9 +136,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -142,9 +151,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -156,9 +166,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -170,9 +181,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -184,9 +196,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     },
     {
@@ -198,9 +211,10 @@ const usersList = [
         phone: 8208465375,
         email: 'dbgt4531@gmail.com',
         institute: 'ICS',
-        program: 'MCA',
-        gr_number: '5875876765768',
+        programme: 'MCA',
+        gr_no: '5875876765768',
         year: '2024',
+        status: 1,
         createdAt: '2024-01-01T11:19:37Z'
     }
 ];
@@ -389,12 +403,13 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                     <div><header className={classes.detailsData}>User creation date: </header><data>{formatDateTime(detailsData.createdAt)}</data></div>
                     <div><header className={classes.detailsData}>Name: </header><data>{detailsData.firstname + ' ' + detailsData.lastname}</data></div>
                     <div><header className={classes.detailsData}>Username: </header><data>{detailsData.username}</data></div>
-                    <div><header className={classes.detailsData}>GR Number: </header><data>{detailsData.gr_number}</data></div>
+                    <div><header className={classes.detailsData}>GR Number: </header><data>{detailsData.gr_no}</data></div>
                     <div><header className={classes.detailsData}>Year: </header><data>{detailsData.year}</data></div>
                     <div><header className={classes.detailsData}>E-Mail: </header><data>{detailsData.email}</data></div>
                     <div><header className={classes.detailsData}>Phone: </header><data>{detailsData.phone}</data></div>
                     <div><header className={classes.detailsData}>Institute: </header><data>{detailsData.institute}</data></div>
-                    <div><header className={classes.detailsData}>Program: </header><data>{detailsData.program}</data></div>
+                    <div><header className={classes.detailsData}>Programme: </header><data>{detailsData.programme}</data></div>
+                    <div><header className={classes.detailsData}>Status: </header><data>{detailsData.status}</data></div>
                 </motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.modifyButtons}>
                     <button className={classes.editButton}>Edit &nbsp;
