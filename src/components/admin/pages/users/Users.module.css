@@ -25,7 +25,7 @@
     height: 100%;
     display: grid;
     border-radius: 1rem;
-    grid-template-rows: 8% 1rem auto 0rem 15%;
+    grid-template-rows: 6% 1rem auto 0rem 10%;
 }
 
 .tableTopOffCreate {
