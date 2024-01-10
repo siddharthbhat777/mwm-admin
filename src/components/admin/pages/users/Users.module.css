@@ -30,7 +30,7 @@
 
 .tableTopOffCreate {
     display: grid;
-    grid-template-columns: 10% auto;
+    grid-template-columns: 10% auto 10%;
     padding-inline: 1rem;
     align-items: center;
 }
@@ -97,7 +97,7 @@
 
 .searchBox {
     position: relative;
-    margin-left: 1rem;
+    margin-inline: 1rem;
     height: 80%;
 }
 
