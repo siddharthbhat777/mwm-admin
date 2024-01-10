@@ -172,7 +172,7 @@
     height: 100%;
     border-radius: 0.5rem;
     box-shadow: #0000000d 0rem 0rem 0rem 0.063rem, #d1d5db 0rem 0rem 0rem 0.063rem inset;
-    background-color: var(--light-gray-color);
+    background-color: var(--darker-gray-color);
 }
 
 .closeButtonContainer {
@@ -300,7 +300,8 @@
     touch-action: manipulation;
     vertical-align: middle;
     will-change: transform, opacity;
-    background-color: var(--dark-button-color);
+    background-color: var(--dark-gray-color);
+    transition: all 0.2s ease-in-out;
 }
 
 .createButton:hover {
@@ -313,7 +314,7 @@
 
 .createButton:active {
     box-shadow: #00000033 0 0.313rem 0.313rem -0.188rem, #00000024 0 0.5rem 0.625rem 0.063rem, #0000001f 0 0.188rem 0.875rem 0.125rem;
-    background: var(--light-button-color);
+    background: #478d47;
 }
 
 /* Details layout */

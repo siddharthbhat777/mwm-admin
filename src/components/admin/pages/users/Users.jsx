@@ -394,56 +394,24 @@ const Users = () => {
 export default Users;
 
 const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
-    const requisitionNumberRef = useRef();
+    const firstnameRef = useRef();
+    const lastnameRef = useRef();
     const usernameRef = useRef();
-    const descriptionRef = useRef();
-    const purposeRef = useRef();
+    const passwordRef = useRef();
+    const grNumberRef = useRef();
+    const emailRef = useRef();
+    const phoneNumberRef = useRef();
 
-    const [department, setDepartment] = useState('');
-    const [category, setCategory] = useState('');
-    const [quantity, setQuantity] = useState(null);
-    const [purchaseType, setPurchaseType] = useState('');
+    const [programme, setProgramme] = useState('');
+    const [institute, setInstitute] = useState('');
+    const [year, setYear] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState(null);
-    // const [hardwareAssetData, setHardwareAssetData] = useState([]);
-    // const [softwareAssetData, setSoftwareAssetData] = useState([]);
-    // const [hardwareAssetOptions, setHardwareAssetOptions] = useState([]);
-    // const [softwareAssetOptions, setSoftwareAssetOptions] = useState([]);
 
-    const departmentDropdownOptions = ['ERP', 'MARCOM', 'Management', 'HR'];
-    const categoryDropdownOptions = ['Software', 'Hardware'];
-    const purchaseTypeDropdownOptions = ['NEW', 'AMC'];
-
-    /* useEffect(() => {
-        if (quantity) {
-            if (category.toLowerCase() === 'hardware') {
-                setHardwareAssetData(Array(quantity).fill(null).map(() => ({ assetId: uniqueId(), assetName: '', company: '', speed: '', hardwareType: '', capacity: '' })));
-            } else if (category.toLowerCase() === 'software') {
-                setSoftwareAssetData(Array(quantity).fill(null).map(() => ({ assetId: uniqueId(), assetName: '', softwareType: '', softwareVersion: '', edition: '', build: '', licenseType: '', systemType: '' })));
-            }
-        }
-    }, [quantity, category]);
-
-    useEffect(() => {
-        const getHardwares = async () => {
-            try {
-                const hardwares = await axios.get('http://localhost:8001/api/modify_data/hardware');
-                setHardwareAssetOptions(hardwares.data.hardware.map(hardware => hardware.hardwareName));
-            } catch (error) {
-                console.log(error.message);
-            }
-        };
-        const getSoftwares = async () => {
-            try {
-                const softwares = await axios.get('http://localhost:8001/api/modify_data/software');
-                setSoftwareAssetOptions(softwares.data.software.map(software => software.softwareName));
-            } catch (error) {
-                console.log(error.message);
-            }
-        };
-        getHardwares();
-        getSoftwares();
-    }, []); */
+    const programmeDropdownOptions = ['MCA', 'MMS', 'CIDTL', 'ISDR'];
+    const instituteDropdownOptions = ['IIT', 'ICS', 'PGDM', 'IIS', 'Management'];
+    const currentYear = new Date().getFullYear();
+    const yearsDropdownOptions = Array.from({ length: currentYear - 1992 }, (_, index) => (1993 + index).toString());
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
@@ -454,47 +422,40 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         setShowAlert(false);
     };
 
-    const handleDepartmentSelect = (value) => {
-        setDepartment(value);
+    const handleProgrammeSelect = (value) => {
+        setProgramme(value);
     };
 
-    const handleCategorySelect = (value) => {
-        setCategory(value);
+    const handleInstituteSelect = (value) => {
+        setInstitute(value);
     };
 
-    const handlePurchaseTypeSelect = (value) => {
-        setPurchaseType(value);
+    const handleYearSelect = (value) => {
+        setYear(value);
     };
 
     const handleCreateSubmit = async (event) => {
         event.preventDefault();
-        /* const selectedData = () => {
-            if (category.toLowerCase() === 'hardware') {
-                return hardwareAssetData;
-            } else if (category.toLowerCase() === 'software') {
-                return softwareAssetData;
-            }
-        };
         const data = {
-            requisitionData: {
-                requisitionNumber: requisitionNumberRef.current.value,
-                username: usernameRef.current.value,
-                department: department,
-                category: category.toLowerCase(),
-                assetData: selectedData(),
-                description: descriptionRef.current.value,
-                quantity: quantity,
-                purchaseType: purchaseType,
-                purpose: purposeRef.current.value
-            }
+            firstname: firstnameRef.current.value,
+            lastname: lastnameRef.current.value,
+            username: usernameRef.current.value,
+            password: passwordRef.current.value,
+            grNumber: grNumberRef.current.value,
+            year: year,
+            email: emailRef.current.value,
+            phoneNumber: phoneNumberRef.current.value,
+            institute: institute,
+            programme: programme
         };
+        console.log(data);
         try {
-            if (!requisitionNumberRef.current.value) {
+            if (!firstnameRef.current.value) {
                 const error = new Error('Please enter required field');
                 error.statusCode = 422;
                 throw error;
             }
-            await axios.post('http://localhost:8001/api/purchase/requisition/createrequisition', data);
+            // await axios.post('http://localhost:8001/api/purchase/requisition/createrequisition', data);
             setRefreshList(true);
             setOpenCreate(false);
         } catch (error) {
@@ -513,7 +474,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                     console.log(error.message);
                 }
             }
-        } */
+        }
     };
 
     return (
@@ -530,19 +491,25 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.formLayoutContainer}>
                 <form method='POST' className={classes.formContainer} onSubmit={(e) => handleCreateSubmit(e)}>
                     <div className={classes.formRowContainer}>
-                        <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Requisition number' ref={requisitionNumberRef} />
-                        <input type='text' className={`${classes.formInput} ${classes.mediumInputSize}`} placeholder='Username' ref={usernameRef} />
-                    </div>
-                    <div className={classes.formRowContainer} style={{ zIndex: 2 }}>
-                        <CustomDropdown defaultText={'Department'} options={departmentDropdownOptions} onSelect={handleDepartmentSelect} />{/* Dropdown */}
-                        <CustomDropdown defaultText={'Category'} options={categoryDropdownOptions} onSelect={handleCategorySelect} />{/* Dropdown */}
+                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Firstname' ref={firstnameRef} />
+                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Lastname' ref={lastnameRef} />
                     </div>
                     <div className={classes.formRowContainer}>
-                        <input type='number' min={0} className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Quantity' onChange={(e) => setQuantity(+e.target.value)} />
-                        <CustomDropdown defaultText={'Purchase type'} options={purchaseTypeDropdownOptions} onSelect={handlePurchaseTypeSelect} />{/* Dropdown */}
+                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Username' ref={usernameRef} />
+                        <input type='password' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Password' ref={passwordRef} />
                     </div>
-                    <textarea rows='3' cols='10' className={`${classes.formInput} ${classes.largeInputSize}`} placeholder='Description' ref={descriptionRef} />
-                    <textarea rows='3' cols='10' className={`${classes.formInput} ${classes.largeInputSize}`} placeholder='Purpose' ref={purposeRef} />
+                    <div className={classes.formRowContainer}>
+                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='GR Number' ref={grNumberRef} />
+                        <CustomDropdown defaultText={'Year'} options={yearsDropdownOptions} onSelect={handleYearSelect} />{/* Dropdown */}
+                    </div>
+                    <div className={classes.formRowContainer}>
+                        <input type='email' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='E-Mail' ref={emailRef} />
+                        <input type='number' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Phone number' ref={phoneNumberRef} />
+                    </div>
+                    <div className={classes.formRowContainer} style={{ zIndex: 2 }}>
+                        <CustomDropdown defaultText={'Institute'} options={instituteDropdownOptions} onSelect={handleInstituteSelect} />{/* Dropdown */}
+                        <CustomDropdown defaultText={'Programme'} options={programmeDropdownOptions} onSelect={handleProgrammeSelect} />{/* Dropdown */}
+                    </div>
                     <button type='submit' className={classes.createButton}>Create</button>
                 </form>
             </motion.div>

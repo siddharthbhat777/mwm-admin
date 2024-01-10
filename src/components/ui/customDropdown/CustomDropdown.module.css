@@ -26,7 +26,9 @@
     background-color: white;
     border: 0.063rem solid var(--light-gray-color);
     box-shadow: 0rem 0.125rem 0.25rem #00000033;
-    z-index: 1;
+    z-index: 3;
+    height: 10rem;
+    overflow: auto;
 }
 
 .dropdownOptions li {
