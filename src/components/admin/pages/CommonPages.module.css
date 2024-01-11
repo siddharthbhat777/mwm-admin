@@ -392,6 +392,10 @@
     color: var(--dark-component-color);
 }
 
+.flexBr {
+    margin-top: 1rem;
+}
+
 .rowNumberData {
     display: flex;
     justify-content: flex-start;
@@ -434,59 +438,62 @@
     gap: 1rem;
 }
 
-.editButton, .deleteButton {
-  align-items: center;
-  appearance: none;
-  border-radius: .25rem;
-  border-style: none;
-  box-shadow: #00000033 0 .1875rem .0625rem -0.125rem,#00000024 0 .125rem .125rem 0,#0000001f 0 .0625rem .3125rem 0;
-  box-sizing: border-box;
-  color: white;
-  cursor: pointer;
-  display: inline-flex;
-  font-family: Roboto,sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  height: 2.25rem;
-  justify-content: center;
-  letter-spacing: .0892857em;
-  line-height: normal;
-  min-width: 4rem;
-  outline: none;
-  overflow: visible;
-  padding: 0 1rem;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: middle;
-  will-change: transform,opacity;
-  background-color: var(--darkest-gray-color);
-  transition: all 0.2s ease-in-out;
+.editButton,
+.deleteButton {
+    align-items: center;
+    appearance: none;
+    border-radius: .25rem;
+    border-style: none;
+    box-shadow: #00000033 0 .1875rem .0625rem -0.125rem, #00000024 0 .125rem .125rem 0, #0000001f 0 .0625rem .3125rem 0;
+    box-sizing: border-box;
+    color: white;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    height: 2.25rem;
+    justify-content: center;
+    letter-spacing: .0892857em;
+    line-height: normal;
+    min-width: 4rem;
+    outline: none;
+    overflow: visible;
+    padding: 0 1rem;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    will-change: transform, opacity;
+    background-color: var(--darkest-gray-color);
+    transition: all 0.2s ease-in-out;
 }
 
-.editButton:hover, .deleteButton:hover {
-  box-shadow: #00000033 0 .125rem .25rem -0.0625rem, #00000024 0 .25rem .3125rem 0, #0000001f 0 .0625rem .625rem 0;
+.editButton:hover,
+.deleteButton:hover {
+    box-shadow: #00000033 0 .125rem .25rem -0.0625rem, #00000024 0 .25rem .3125rem 0, #0000001f 0 .0625rem .625rem 0;
 }
 
-.editButton:focus, .deleteButton:focus {
-  box-shadow: #00000033 0 .125rem .25rem -0.0625rem, #00000024 0 .25rem .3125rem 0, #0000001f 0 .0625rem .625rem 0;
+.editButton:focus,
+.deleteButton:focus {
+    box-shadow: #00000033 0 .125rem .25rem -0.0625rem, #00000024 0 .25rem .3125rem 0, #0000001f 0 .0625rem .625rem 0;
 }
 
 .editButton:active {
-  box-shadow: #00000033 0 .3125rem .3125rem -0.1875rem, #00000024 0 .5rem .625rem .0625rem, #0000001f 0 .1875rem .875rem .125rem;
-  background: #bec048;
-  color: black;
+    box-shadow: #00000033 0 .3125rem .3125rem -0.1875rem, #00000024 0 .5rem .625rem .0625rem, #0000001f 0 .1875rem .875rem .125rem;
+    background: #bec048;
+    color: black;
 }
 
 .deleteButton:active {
-  box-shadow: #00000033 0 .3125rem .3125rem -0.1875rem, #00000024 0 .5rem .625rem .0625rem, #0000001f 0 .1875rem .875rem .125rem;
-  background: #c44646;
-  color: black;
+    box-shadow: #00000033 0 .3125rem .3125rem -0.1875rem, #00000024 0 .5rem .625rem .0625rem, #0000001f 0 .1875rem .875rem .125rem;
+    background: #c44646;
+    color: black;
 }
 
 @media screen and (max-width: 480px) {

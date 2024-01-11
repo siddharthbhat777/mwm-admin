@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import classes from './Users.module.css';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
+import classes from '../CommonPages.module.css';
 import { AnimatePresence, motion } from 'framer-motion';
 import Loader from '../../../ui/loader/Loader';
 import Table from '../../../ui/table/Table';
@@ -530,6 +530,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 };
 
 const DetailsView = ({ setOpenDetails, detailsData }) => {
+    const [editMode, setEditMode] = useState(false);
     const formatDateTime = (createdAt) => {
         if (createdAt === null) {
             return null;
@@ -555,6 +556,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
         const formattedTime = formatTime(date);
         return `${formattedDate} ${formattedTime}`;
     };
+
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.2 }} className={classes.detailsViewContainer}>
             <div className={classes.detailsContainer}>
@@ -564,31 +566,127 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                     </svg>
                 </motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.details}>
-                    <span>User Details</span>
+                    <span>{editMode? 'Edit User Details' : 'User Details'}</span>
                     <hr className={classes.detailsSectionHr} />
-                    <div><header className={classes.detailsData}>User creation date: </header><data>{formatDateTime(detailsData.createdAt)}</data></div>
-                    <div><header className={classes.detailsData}>Name: </header><data>{detailsData.firstname + ' ' + detailsData.lastname}</data></div>
-                    <div><header className={classes.detailsData}>Username: </header><data>{detailsData.username}</data></div>
-                    <div><header className={classes.detailsData}>GR Number: </header><data>{detailsData.gr_no}</data></div>
-                    <div><header className={classes.detailsData}>Year: </header><data>{detailsData.year}</data></div>
-                    <div><header className={classes.detailsData}>E-Mail: </header><data>{detailsData.email}</data></div>
-                    <div><header className={classes.detailsData}>Phone: </header><data>{detailsData.phone}</data></div>
-                    <div><header className={classes.detailsData}>Institute: </header><data>{detailsData.institute}</data></div>
-                    <div><header className={classes.detailsData}>Programme: </header><data>{detailsData.programme}</data></div>
-                    <div><header className={classes.detailsData}>Status: </header><data>{detailsData.status}</data></div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>User creation date: </header>
+                        <data>{formatDateTime(detailsData.createdAt)}</data>
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Name: </header>
+                        {
+                            editMode ?
+                                <Fragment>
+                                    <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Firstname' defaultValue={detailsData.firstname} />
+                                    <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Lastname' defaultValue={detailsData.lastname} />
+                                </Fragment>
+                                :
+                                <data>{detailsData.firstname + ' ' + detailsData.lastname}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Username: </header>
+                        {
+                            editMode ?
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Username' defaultValue={detailsData.username} />
+                                :
+                                <data>{detailsData.username}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>GR Number: </header>
+                        {
+                            editMode ?
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='GR Number' defaultValue={detailsData.gr_no} />
+                                :
+                                <data>{detailsData.gr_no}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Year: </header>
+                        {
+                            editMode ?
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='yEAR' defaultValue={detailsData.year} />
+                                :
+                                <data>{detailsData.year}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>E-Mail: </header>
+                        {
+                            editMode ?
+                                <input type='email' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='E-Mail' defaultValue={detailsData.email} />
+                                :
+                                <data>{detailsData.email}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Phone: </header>
+                        {
+                            editMode ?
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Phone Number' defaultValue={detailsData.phone} />
+                                :
+                                <data>{detailsData.phone}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Institute: </header>
+                        {
+                            editMode ?
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Institute' defaultValue={detailsData.institute} />
+                                :
+                                <data>{detailsData.institute}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Programme: </header>
+                        {
+                            editMode ?
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Programme' defaultValue={detailsData.programme} />
+                                :
+                                <data>{detailsData.programme}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Status: </header>
+                        {
+                            editMode ?
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Status' defaultValue={detailsData.status} />
+                                :
+                                <data>{detailsData.status}</data>
+                        }
+                    </div>
                 </motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.modifyButtons}>
-                    <button className={classes.editButton}>Edit &nbsp;
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                        </svg>
-                    </button>
-                    <button className={classes.deleteButton}>Delete &nbsp;
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
-                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
-                        </svg>
-                    </button>
+                    {
+                        editMode ?
+                            <Fragment>
+                                <button className={classes.editButton} onClick={() => setEditMode(true)}>Save changes &nbsp;
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-floppy2" viewBox="0 0 16 16">
+                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z" />
+                                    </svg>
+                                </button>
+                                <button className={classes.deleteButton} onClick={() => setEditMode(false)}>Cancel &nbsp;
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                                    </svg>
+                                </button>
+                            </Fragment>
+                            :
+                            <Fragment>
+                                <button className={classes.editButton} onClick={() => setEditMode(true)}>Edit &nbsp;
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                        <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                    </svg>
+                                </button>
+                                <button className={classes.deleteButton}>Delete &nbsp;
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
+                                    </svg>
+                                </button>
+                            </Fragment>
+                    }
                 </motion.div>
             </div>
         </motion.div>
