@@ -319,6 +319,15 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 
 const DetailsView = ({ setOpenDetails, detailsData }) => {
     const [editMode, setEditMode] = useState(false);
+    const [programme, setProgramme] = useState('');
+    const [institute, setInstitute] = useState('');
+    const [year, setYear] = useState('');
+
+    const programmeDropdownOptions = ['MCA', 'MMS', 'CIDTL', 'ISDR'];
+    const instituteDropdownOptions = ['IIT', 'ICS', 'PGDM', 'IIS', 'Management'];
+    const currentYear = new Date().getFullYear();
+    const yearsDropdownOptions = Array.from({ length: currentYear - 1992 }, (_, index) => (1993 + index).toString());
+
     const formatDateTime = (createdAt) => {
         if (createdAt === null) {
             return null;
@@ -345,6 +354,18 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
         return `${formattedDate} ${formattedTime}`;
     };
 
+    const handleProgrammeSelect = (value) => {
+        setProgramme(value);
+    };
+
+    const handleInstituteSelect = (value) => {
+        setInstitute(value);
+    };
+
+    const handleYearSelect = (value) => {
+        setYear(value);
+    };
+
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.2 }} className={classes.detailsViewContainer}>
             <div className={classes.detailsContainer}>
@@ -354,7 +375,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                     </svg>
                 </motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.details}>
-                    <span>{editMode? 'Edit User Details' : 'User Details'}</span>
+                    <span>{editMode ? 'Edit User Details' : 'User Details'}</span>
                     <hr className={classes.detailsSectionHr} />
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>User creation date: </header>
@@ -391,10 +412,28 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                         }
                     </div>
                     <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Institute: </header>
+                        {
+                            editMode ?
+                                <CustomDropdown defaultText={detailsData.institute} options={instituteDropdownOptions} onSelect={handleInstituteSelect} />
+                                :
+                                <data>{detailsData.institute}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Programme: </header>
+                        {
+                            editMode ?
+                                <CustomDropdown defaultText={detailsData.programme} options={programmeDropdownOptions} onSelect={handleProgrammeSelect} />
+                                :
+                                <data>{detailsData.programme}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
                         <header className={classes.detailsData}>Year: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='yEAR' defaultValue={detailsData.year} />
+                            <CustomDropdown defaultText={detailsData.year} options={yearsDropdownOptions} onSelect={handleYearSelect} />
                                 :
                                 <data>{detailsData.year}</data>
                         }
@@ -415,24 +454,6 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                                 <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Phone Number' defaultValue={detailsData.phone} />
                                 :
                                 <data>{detailsData.phone}</data>
-                        }
-                    </div>
-                    <div className={classes.flexBr}>
-                        <header className={classes.detailsData}>Institute: </header>
-                        {
-                            editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Institute' defaultValue={detailsData.institute} />
-                                :
-                                <data>{detailsData.institute}</data>
-                        }
-                    </div>
-                    <div className={classes.flexBr}>
-                        <header className={classes.detailsData}>Programme: </header>
-                        {
-                            editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Programme' defaultValue={detailsData.programme} />
-                                :
-                                <data>{detailsData.programme}</data>
                         }
                     </div>
                     <div className={classes.flexBr}>
