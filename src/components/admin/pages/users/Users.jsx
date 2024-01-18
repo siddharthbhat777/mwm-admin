@@ -322,6 +322,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
     const [programme, setProgramme] = useState('');
     const [institute, setInstitute] = useState('');
     const [year, setYear] = useState('');
+    console.log(programme, institute, year);
 
     const programmeDropdownOptions = ['MCA', 'MMS', 'CIDTL', 'ISDR'];
     const instituteDropdownOptions = ['IIT', 'ICS', 'PGDM', 'IIS', 'Management'];
