@@ -134,7 +134,7 @@ const Users = () => {
                 {
                     (window.innerWidth > 480 ? true : !openCreate) &&
                     <div className={classes.mainListContainer}>
-                        <div className={openCreate ? classes.tableTopOnCreate : classes.tableTopOffCreate}>
+                        <div className={openCreate ? classes.tableTopOnCreate : `${classes.tableTopOffCreate} ${classes.threeCols}`}>
                             {
                                 !openCreate &&
                                 <button className={classes.topCreateButton} onClick={handleOpenCreate}>

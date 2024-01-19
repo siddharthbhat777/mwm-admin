@@ -30,9 +30,16 @@
 
 .tableTopOffCreate {
     display: grid;
-    grid-template-columns: 10% auto 10%;
     padding-inline: 1rem;
     align-items: center;
+}
+
+.threeCols {
+    grid-template-columns: 10% auto 10%;
+}
+
+.twoCols {
+    grid-template-columns: 10% auto;
 }
 
 .tableTopOnCreate {
