@@ -3,7 +3,6 @@ import classes from './Navbar.module.css';
 import Hamburger from 'hamburger-react'
 import { useNavigate } from 'react-router-dom';
 // import AuthContext from '../../../context/AuthContext/AuthContext';
-import axios from 'axios';
 import ls from 'localstorage-slim';
 import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
 
@@ -12,7 +11,6 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [focus, setFocus] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [userDetails, setUserDetails] = useState(null);
     const [showAlert, setShowAlert] = useState(false);
 
     const handleCloseAlert = () => {
@@ -20,7 +18,7 @@ const Navbar = () => {
     };
 
     const handleSubmitAlert = () => {
-        localStorage.removeItem('email');
+        ls.remove('email');
         navigate('/admin/login');
         setShowAlert(false);
     };
@@ -61,18 +59,6 @@ const Navbar = () => {
     };
 
     useEffect(() => {
-        const getUserDetails = async () => {
-            try {
-                const user = await axios.get(`http://localhost:8001/api/auth/userdetails/${ls.get('email', { decrypt: true })}`);
-                setUserDetails(user.data.user);
-            } catch (error) {
-                console.log(error.message);
-            }
-        };
-        getUserDetails();
-    }, []);
-
-    useEffect(() => {
         if (!localStorage.getItem('email')) {
             navigate('/admin/login');
         }
@@ -91,12 +77,12 @@ const Navbar = () => {
                     </div>
                     <div className={classes.profileLayout}>
                         <div className={classes.topContainer}>
-                            <span className={classes.profileEmail}>{userDetails? userDetails.email : 'Unknown'}</span>
+                            <span className={classes.profileEmail}>{ls.get('email', { decrypt: true })? ls.get('email', { decrypt: true }) : 'Unknown'}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                                 <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
                             </svg>
-                            <span className={classes.profileUsername}>{ userDetails? userDetails.firstname + ' ' + userDetails.lastname : 'Unknown'}</span>
+                            <span className={classes.profileUsername}>Admin</span>
                         </div>
                         <div className={classes.bottomContainer} onClick={() => setShowAlert(true)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-left" viewBox="0 0 16 16">
@@ -191,7 +177,7 @@ const Navbar = () => {
                     </div>
                 </div>
                 &nbsp;&nbsp;
-                <h3 className={classes.username}>{userDetails !== null ? (userDetails.firstname + ' ' + userDetails.lastname) : 'Unknown'}</h3>
+                <h3 className={classes.username}>Admin</h3>
                 &nbsp;
             </div>
         </div>

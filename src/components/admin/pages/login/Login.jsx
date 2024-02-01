@@ -3,6 +3,7 @@ import classes from './Login.module.css';
 import { useNavigate } from 'react-router-dom';
 import metLogo from '../../../../assets/MET-logo.png';
 import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
+import ls from 'localstorage-slim';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (emailRef.current.value === 'admin@met.edu' && passwordRef.current.value === 'admin') {
-            localStorage.setItem('email', emailRef.current.value);
+            ls.set('email', emailRef.current.value, { encrypt: true });
             navigate('/admin');
         } else {
             setShowAlert(true);
@@ -27,7 +28,7 @@ const Login = () => {
     };
 
     useEffect(() => {
-        if (localStorage.getItem('email')) {
+        if (ls.get('email', { decrypt: true })) {
             navigate('/admin');
         }
     }, [navigate]);
