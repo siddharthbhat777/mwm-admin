@@ -7,7 +7,7 @@ import Pagination from '../../../ui/table/pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
 import CustomDropdown from '../../../ui/customDropdown/CustomDropdown';
-import { usersList } from '../../../../utils/dummydata';
+// import { usersList } from '../../../../utils/dummydata';
 import axios from 'axios';
 
 const Users = () => {
@@ -74,8 +74,8 @@ const Users = () => {
         setShowLoader(true);
         const gettingUsers = async () => {
             try {
-                // const requisitions = await axios.get('http://localhost:8001/api/purchase/requisition/');
-                setData(usersList);
+                const users = await axios.get('http://localhost:5000/api/auth/get-all-users');
+                setData(users.data.users);
             } catch (error) {
                 if (error.response) {
                     if (error.response.status === 500) {
@@ -372,27 +372,19 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                     <hr className={classes.detailsSectionHr} />
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>User creation date: </header>
-                        <data>{formatDateTime(detailsData.createdAt)}</data>
+                        <data>{formatDateTime(detailsData.created_at)}</data>
                     </div>
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>Name: </header>
                         {
                             editMode ?
                                 <Fragment>
-                                    <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Firstname' defaultValue={detailsData.firstname} />
-                                    <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Lastname' defaultValue={detailsData.lastname} />
+                                    <input type='text' className={`${classes.formInput} ${classes.smallestInputSize}`} placeholder='Firstname' defaultValue={detailsData.firstname} />
+                                    <input type='text' className={`${classes.formInput} ${classes.smallestInputSize}`} placeholder='Middlename' defaultValue={detailsData.middlename} />
+                                    <input type='text' className={`${classes.formInput} ${classes.smallestInputSize}`} placeholder='Lastname' defaultValue={detailsData.lastname} />
                                 </Fragment>
                                 :
-                                <data>{detailsData.firstname + ' ' + detailsData.lastname}</data>
-                        }
-                    </div>
-                    <div className={classes.flexBr}>
-                        <header className={classes.detailsData}>Username: </header>
-                        {
-                            editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Username' defaultValue={detailsData.username} />
-                                :
-                                <data>{detailsData.username}</data>
+                                <data>{detailsData.firstname + ' ' + detailsData.middlename + ' ' + detailsData.lastname}</data>
                         }
                     </div>
                     <div className={classes.flexBr}>
@@ -438,15 +430,6 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                                 <input type='email' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='E-Mail' defaultValue={detailsData.email} />
                                 :
                                 <data>{detailsData.email}</data>
-                        }
-                    </div>
-                    <div className={classes.flexBr}>
-                        <header className={classes.detailsData}>Phone: </header>
-                        {
-                            editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Phone Number' defaultValue={detailsData.phone} />
-                                :
-                                <data>{detailsData.phone}</data>
                         }
                     </div>
                     <div className={classes.flexBr}>
