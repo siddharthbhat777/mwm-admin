@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
 import CustomDropdown from '../../../ui/customDropdown/CustomDropdown';
 import { usersList } from '../../../../utils/dummydata';
+import axios from 'axios';
 
 const Users = () => {
     const location = useLocation();
@@ -71,7 +72,7 @@ const Users = () => {
     useEffect(() => {
         const delay = 1000;
         setShowLoader(true);
-        const gettingRequisitions = async () => {
+        const gettingUsers = async () => {
             try {
                 // const requisitions = await axios.get('http://localhost:8001/api/purchase/requisition/');
                 setData(usersList);
@@ -90,7 +91,7 @@ const Users = () => {
             }
         };
         const debounce = setTimeout(() => {
-            gettingRequisitions();
+            gettingUsers();
             setShowLoader(false);
         }, delay);
 
@@ -195,12 +196,10 @@ export default Users;
 
 const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const firstnameRef = useRef();
+    const middlenameRef = useRef();
     const lastnameRef = useRef();
-    const usernameRef = useRef();
-    const passwordRef = useRef();
     const grNumberRef = useRef();
     const emailRef = useRef();
-    const phoneNumberRef = useRef();
 
     const [programme, setProgramme] = useState('');
     const [institute, setInstitute] = useState('');
@@ -238,24 +237,21 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         event.preventDefault();
         const data = {
             firstname: firstnameRef.current.value,
+            middlename: middlenameRef.current.value,
             lastname: lastnameRef.current.value,
-            username: usernameRef.current.value,
-            password: passwordRef.current.value,
-            grNumber: grNumberRef.current.value,
+            gr_no: grNumberRef.current.value,
             year: year,
             email: emailRef.current.value,
-            phoneNumber: phoneNumberRef.current.value,
             institute: institute,
             programme: programme
         };
-        console.log(data);
         try {
             if (!firstnameRef.current.value) {
                 const error = new Error('Please enter required field');
                 error.statusCode = 422;
                 throw error;
             }
-            // await axios.post('http://localhost:8001/api/purchase/requisition/createrequisition', data);
+            await axios.post('http://localhost:5000/api/auth/register', data);
             setRefreshList(true);
             setOpenCreate(false);
         } catch (error) {
@@ -292,19 +288,15 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                 <form method='POST' className={classes.formContainer} onSubmit={(e) => handleCreateSubmit(e)}>
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Firstname' ref={firstnameRef} />
+                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Middlename' ref={middlenameRef} />
+                    </div>
+                    <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Lastname' ref={lastnameRef} />
-                    </div>
-                    <div className={classes.formRowContainer}>
-                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Username' ref={usernameRef} />
-                        <input type='password' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Password' ref={passwordRef} />
-                    </div>
-                    <div className={classes.formRowContainer}>
-                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='GR Number' ref={grNumberRef} />
                         <CustomDropdown defaultText={'Year'} options={yearsDropdownOptions} onSelect={handleYearSelect} />{/* Dropdown */}
                     </div>
                     <div className={classes.formRowContainer}>
+                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='GR Number' ref={grNumberRef} />
                         <input type='email' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='E-Mail' ref={emailRef} />
-                        <input type='number' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Phone number' ref={phoneNumberRef} />
                     </div>
                     <div className={classes.formRowContainer} style={{ zIndex: 2 }}>
                         <CustomDropdown defaultText={'Institute'} options={instituteDropdownOptions} onSelect={handleInstituteSelect} />{/* Dropdown */}
