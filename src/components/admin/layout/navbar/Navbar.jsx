@@ -20,7 +20,8 @@ const Navbar = () => {
     };
 
     const handleSubmitAlert = () => {
-        // authCtx.onLogout();
+        localStorage.removeItem('email');
+        navigate('/admin/login');
         setShowAlert(false);
     };
 
@@ -70,6 +71,12 @@ const Navbar = () => {
         };
         getUserDetails();
     }, []);
+
+    useEffect(() => {
+        if (!localStorage.getItem('email')) {
+            navigate('/admin/login');
+        }
+    }, [navigate]);
 
     return (
         <div className={classes.navbar}>

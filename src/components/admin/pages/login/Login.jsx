@@ -1,34 +1,40 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classes from './Login.module.css';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import metLogo from '../../../../assets/MET-logo.png';
+import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
 
 const Login = () => {
+    const navigate = useNavigate();
     const emailRef = useRef();
     const passwordRef = useRef();
 
     const [showPassword, setShowPassword] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        /* const data = {
-            email: emailRef.current.value,
-            password: passwordRef.current.value
+        if (emailRef.current.value === 'admin@met.edu' && passwordRef.current.value === 'admin') {
+            localStorage.setItem('email', emailRef.current.value);
+            navigate('/admin');
+        } else {
+            setShowAlert(true);
         }
-        try {
-            const userLogin = await axios.post('http://localhost:8001/api/auth', data);
-            localStorage.setItem('accessToken', userLogin.data.token);
-            localStorage.setItem('refreshToken', userLogin.data.refreshToken);
-            ls.set('email', emailRef.current.value, { encrypt: true });
-            authCtx.onLogin(data.email);
-            navigate('/');
-        } catch (error) {
-            console.log(error.message);
-        } */
     };
+
+    useEffect(() => {
+        if (localStorage.getItem('email')) {
+            navigate('/admin');
+        }
+    }, [navigate]);
 
     return (
         <div className={classes.fullScreen}>
+            {showAlert && <OKAlert message={{ header: 'Error', submessage: 'Wrong email or password' }} onClose={handleCloseAlert} />}
             <div className={classes.container}>
                 <div className={classes.divideLayout}>
                     <div className={classes.leftLayout} />
@@ -52,10 +58,6 @@ const Login = () => {
                                             </svg>
                                     }
                                 </div>
-                            </div>
-                            <div className={classes.buttonsLogin}>
-                                <span className={classes.rememberMe}><input style={{ cursor: 'pointer' }} type="checkbox" />&nbsp;Remember me</span>
-                                <Link className={classes.forgotPasword} to='#'>Forgot password?</Link>
                             </div>
                             <button className={classes.loginButton} type='submit'>Login</button>
                         </form>
