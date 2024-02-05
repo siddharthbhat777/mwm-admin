@@ -302,7 +302,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                         <CustomDropdown defaultText={'Type'} options={[ 'staff', 'student' ]} onSelect={handleTypeSelect} />{/* Dropdown */}
                     </div>
                     <div className={classes.formRowContainer}>
-                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='GR Number' ref={grNumberRef} />
+                        <input type='text' size={13} className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='GR Number' ref={grNumberRef} />
                         <input type='email' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='E-Mail' ref={emailRef} />
                     </div>
                     <div className={classes.formRowContainer} style={{ zIndex: 2 }}>
@@ -432,7 +432,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                     <hr className={classes.detailsSectionHr} />
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>User creation date: </header>
-                        <data>{formatDateTime(detailsData.created_at)}</data>
+                        <data>{formatDateTime(detailsData.createdAt)}</data>
                     </div>
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>Name: </header>
@@ -451,7 +451,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>GR Number: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='GR Number' defaultValue={detailsData.gr_no} ref={grNumberRef} />
+                                <input type='text' size={13} className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='GR Number' defaultValue={detailsData.gr_no} ref={grNumberRef} />
                                 :
                                 <data>{detailsData.gr_no}</data>
                         }
@@ -487,7 +487,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>E-Mail: </header>
                         {
                             editMode ?
-                                <input type='email' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='E-Mail' defaultValue={detailsData.email} ref={emailRef} />
+                                <input type='email' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='E-Mail' defaultValue={detailsData.email} ref={emailRef} />
                                 :
                                 <data>{detailsData.email}</data>
                         }
