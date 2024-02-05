@@ -33,7 +33,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--dark-button-color);
+    background-color: var(--dark-component-color);
 }
 
 .bottomContent {
@@ -43,7 +43,7 @@
     gap: 1rem;
     padding-inline: 1rem;
     padding-bottom: 1rem;
-    color: var(--dark-button-color);
+    color: black;
 }
 
 .submessage {
@@ -60,12 +60,12 @@
     border-style: none;
     box-shadow: #00000033 0 0.188rem 0.063rem -0.125rem, #00000024 0 0.125rem 0.125rem 0, #0000001f 0 0.063rem 0.313rem 0;
     box-sizing: border-box;
-    color: #fff;
+    color: white;
     cursor: pointer;
     display: inline-flex;
     font-family: Roboto, sans-serif;
     font-size: .875rem;
-    font-weight: 500;
+    font-weight: 600;
     height: 2.25rem;
     justify-content: center;
     letter-spacing: .0892857em;
@@ -84,7 +84,8 @@
     touch-action: manipulation;
     vertical-align: middle;
     will-change: transform, opacity;
-    background-color: var(--dark-button-color);
+    background-color: var(--dark-component-color);
+    transition: all 0.2s ease-in-out;
 }
 
 .customAlertOkButton:hover {
@@ -97,7 +98,7 @@
 
 .customAlertOkButton:active {
     box-shadow: #00000033 0 0.313rem 0.313rem -0.188rem, #00000024 0 0.5rem 0.625rem 0.063rem, #0000001f 0 0.188rem 0.875rem 0.125rem;
-    background: var(--light-button-color);
+    background: var(--darker-gray-color);
 }
 
 .yesNoButtons {
