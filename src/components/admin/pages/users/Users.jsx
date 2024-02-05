@@ -13,6 +13,7 @@ import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
 
 const Users = () => {
     const location = useLocation();
+    const fileInputRef = useRef();
     const [openCreate, setOpenCreate] = useState(false);
     const [openDetails, setOpenDetails] = useState(false);
     const [data, setData] = useState([]);
@@ -120,8 +121,29 @@ const Users = () => {
         setSelectedRowData(row);
     };
 
-    const handleImportData = () => {
-        console.log('Data imported');
+    const handleImportData = async () => {
+        try {
+            fileInputRef.current.click();
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            await axios.post('http://localhost:5000/api/auth/upload-file', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setRefreshList(true);
+        } catch (error) {
+            console.error(error.message);
+        }
     };
 
     return (
@@ -162,6 +184,13 @@ const Users = () => {
                                         <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0" />
                                     </svg>
                                     <span>Import</span>
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        style={{ display: 'none' }}
+                                        onChange={handleFileChange}
+                                        accept=".csv"
+                                    />
                                 </div>
                             </button>
                         </div>
@@ -299,7 +328,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                     </div>
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Lastname' ref={lastnameRef} />
-                        <CustomDropdown defaultText={'Type'} options={[ 'staff', 'student' ]} onSelect={handleTypeSelect} />{/* Dropdown */}
+                        <CustomDropdown defaultText={'Type'} options={['staff', 'student']} onSelect={handleTypeSelect} />{/* Dropdown */}
                     </div>
                     <div className={classes.formRowContainer}>
                         <input type='text' size={13} className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='GR Number' ref={grNumberRef} />

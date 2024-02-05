@@ -41,7 +41,7 @@ const Table = ({ rows, columns, isRowSelected, selectedRow }) => {
                         <tbody>
                             {
                                 rows.map((row, index) => (
-                                    <tr key={row.id} onClick={() => handleRowSelect(row, index)} className={index === selectedRowIndex ? classes.selectedRow : ''}>
+                                    <tr key={row._id} onClick={() => handleRowSelect(row, index)} className={index === selectedRowIndex ? classes.selectedRow : ''}>
                                         {
                                             columns.map((column) => (
                                                 <td key={column.field}>
