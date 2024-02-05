@@ -185,7 +185,7 @@ const Users = () => {
             <AnimatePresence>
                 {
                     openDetails &&
-                    <DetailsView setOpenDetails={setOpenDetails} detailsData={selectedRowData} />
+                    <DetailsView setOpenDetails={setOpenDetails} detailsData={selectedRowData} setRefreshList={setRefreshList} />
                 }
             </AnimatePresence>
         </div>
@@ -309,7 +309,13 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     );
 };
 
-const DetailsView = ({ setOpenDetails, detailsData }) => {
+const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
+    const firstnameRef = useRef();
+    const middlenameRef = useRef();
+    const lastnameRef = useRef();
+    const grNumberRef = useRef();
+    const emailRef = useRef();
+
     const [editMode, setEditMode] = useState(false);
     const [programme, setProgramme] = useState('');
     const [institute, setInstitute] = useState('');
@@ -359,10 +365,22 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
         setYear(value);
     };
 
-    const handleEditChanges = async () => {
+    const handleEditChanges = async (id) => {
+        const data = {
+            firstname: firstnameRef.current.value,
+            middlename: middlenameRef.current.value,
+            lastname: lastnameRef.current.value,
+            gr_no: grNumberRef.current.value,
+            institute: institute,
+            programme: programme,
+            year: year,
+            email: emailRef.current.value
+        };
         try {
-            await axios.put(`http://localhost:5000/api/auth/update-user/`)
+            await axios.put(`http://localhost:5000/api/auth/update-user/${id}`, data)
             setEditMode(false);
+            setOpenDetails(false);
+            setRefreshList(true);
         } catch (error) {
             console.log(error.message);
         }
@@ -388,9 +406,9 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                         {
                             editMode ?
                                 <Fragment>
-                                    <input type='text' className={`${classes.formInput} ${classes.smallestInputSize}`} placeholder='Firstname' defaultValue={detailsData.firstname} />
-                                    <input type='text' className={`${classes.formInput} ${classes.smallestInputSize}`} placeholder='Middlename' defaultValue={detailsData.middlename} />
-                                    <input type='text' className={`${classes.formInput} ${classes.smallestInputSize}`} placeholder='Lastname' defaultValue={detailsData.lastname} />
+                                    <input type='text' className={`${classes.formInput} ${classes.smallestInputSize}`} placeholder='Firstname' defaultValue={detailsData.firstname} ref={firstnameRef} />
+                                    <input type='text' className={`${classes.formInput} ${classes.smallestInputSize}`} placeholder='Middlename' defaultValue={detailsData.middlename} ref={middlenameRef} />
+                                    <input type='text' className={`${classes.formInput} ${classes.smallestInputSize}`} placeholder='Lastname' defaultValue={detailsData.lastname} ref={lastnameRef} />
                                 </Fragment>
                                 :
                                 <data>{detailsData.firstname + ' ' + detailsData.middlename + ' ' + detailsData.lastname}</data>
@@ -400,7 +418,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                         <header className={classes.detailsData}>GR Number: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='GR Number' defaultValue={detailsData.gr_no} />
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='GR Number' defaultValue={detailsData.gr_no} ref={grNumberRef} />
                                 :
                                 <data>{detailsData.gr_no}</data>
                         }
@@ -436,7 +454,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                         <header className={classes.detailsData}>E-Mail: </header>
                         {
                             editMode ?
-                                <input type='email' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='E-Mail' defaultValue={detailsData.email} />
+                                <input type='email' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='E-Mail' defaultValue={detailsData.email} ref={emailRef} />
                                 :
                                 <data>{detailsData.email}</data>
                         }
@@ -450,7 +468,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                     {
                         editMode ?
                             <Fragment>
-                                <button className={classes.editButton} onClick={handleEditChanges}>Save changes &nbsp;
+                                <button className={classes.editButton} onClick={() => handleEditChanges(detailsData._id)}>Save changes &nbsp;
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-floppy2" viewBox="0 0 16 16">
                                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z" />
                                     </svg>
