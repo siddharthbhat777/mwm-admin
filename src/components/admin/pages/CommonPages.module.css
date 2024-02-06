@@ -543,24 +543,12 @@
         gap: 0.5rem;
     }
 
-    .smallestInputSize {
-        width: 12vw;
-    }
-
-    .smallerInputSize {
-        width: 20vw;
-    }
-
-    .smallInputSize {
-        width: 30.5vw;
-    }
-
-    .mediumInputSize {
-        width: 40.5vw;
+    .smallestInputSize, .smallerInputSize, .smallInputSize, .mediumInputSize {
+        width: calc(46vw - 1rem);
     }
 
     .largeInputSize {
-        width: 70vw;
+        width: calc(100vw - 2rem);
         resize: none;
     }
 

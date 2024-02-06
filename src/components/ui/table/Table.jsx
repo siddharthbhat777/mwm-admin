@@ -33,15 +33,17 @@ const Table = ({ rows, columns, isRowSelected, selectedRow }) => {
                     <table className={classes.mainTable}>
                         <thead>
                             <tr>
-                                {columns.map((column) => (
-                                    <th key={column.field}>{column.header}</th>
-                                ))}
+                                {
+                                    columns.map((column) => (
+                                        <th key={column.field}>{column.header}</th>
+                                    ))
+                                }
                             </tr>
                         </thead>
                         <tbody>
                             {
                                 rows.map((row, index) => (
-                                    <tr key={row._id} onClick={() => handleRowSelect(row, index)} className={index === selectedRowIndex ? classes.selectedRow : ''}>
+                                    <tr key={index} onClick={() => handleRowSelect(row, index)} className={index === selectedRowIndex ? classes.selectedRow : ''}>
                                         {
                                             columns.map((column) => (
                                                 <td key={column.field}>

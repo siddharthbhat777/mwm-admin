@@ -586,3 +586,26 @@ export const mediaList = [
     }
     // Continue adding more media data as needed
 ];
+
+export const artists = [
+    "Arijit Singh",
+    "Lata Mangeshkar",
+    "A.R. Rahman",
+    "Shreya Ghoshal",
+    "Sonu Nigam",
+    "Neha Kakkar",
+    "Kishore Kumar",
+    "Sunidhi Chauhan",
+    "Mohit Chauhan",
+    "Asha Bhosle",
+    "Beyoncé",
+    "Taylor Swift",
+    "Ed Sheeran",
+    "Adele",
+    "Justin Bieber",
+    "Rihanna",
+    "Lady Gaga",
+    "Bruno Mars",
+    "Ariana Grande",
+    "Michael Jackson"
+];

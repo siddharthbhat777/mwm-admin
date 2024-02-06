@@ -46,6 +46,6 @@
 
 @media screen and (max-width: 480px) {
     .customDropdown, .dropdownOptions {
-        max-width: 30.5vw;
+        max-width: calc(46vw - 1rem);
     }
 }

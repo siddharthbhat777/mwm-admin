@@ -6,7 +6,9 @@ import Table from '../../../ui/table/Table';
 import Pagination from '../../../ui/table/pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
-import { mediaList } from '../../../../utils/dummydata';
+import { artists, mediaList } from '../../../../utils/dummydata';
+import MultiSelectDropdown from '../../../ui/customDropdown/multipleDropdown/MultiSelectDropdown';
+import TagsInput from '../../../ui/tagsInput/TagsInput';
 
 const Media = () => {
     const location = useLocation();
@@ -191,6 +193,9 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState(null);
+    const [selectedArtistsOptions, setSelectedArtistsOptions] = useState([]);
+    const [tags, setTags] = useState([]);
+    console.log(selectedArtistsOptions);
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
@@ -201,8 +206,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         setShowAlert(false);
     };
 
-    const handleCreateSubmit = async (event) => {
-        event.preventDefault();
+    const handleCreateSubmit = async () => {
         const data = {
             title: titleRef.current.value,
             artists: artistsRef.current.value,
@@ -241,6 +245,14 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         }
     };
 
+    const handleArtistsSelectionChange = (updatedOptions) => {
+        setSelectedArtistsOptions(updatedOptions);
+    };
+
+    const selectedTags = tags => {
+		setTags(tags);
+	};
+
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.3 }} className={classes.mainCreateContainer}>
             {
@@ -253,11 +265,11 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                 </svg>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.formLayoutContainer}>
-                <form method='POST' className={classes.formContainer} onSubmit={(e) => handleCreateSubmit(e)}>
+                <div className={classes.formContainer}>
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Title' ref={titleRef} />
-                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Artist' ref={artistsRef} />
                     </div>
+                    <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} />
                     <div className={classes.formRowContainer}>
                         <input type='file' className={`${classes.formInput} ${classes.smallInputSize}`} ref={fileRef} />
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Category' ref={categoryRef} />
@@ -269,8 +281,9 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Tags' ref={tagsRef} />
                     </div>
-                    <button type='submit' className={classes.createButton}>Create</button>
-                </form>
+                    <TagsInput selectedTags={selectedTags}  tagsInput={tags} />
+                    <button onClick={handleCreateSubmit} className={classes.createButton}>Create</button>
+                </div>
             </motion.div>
         </motion.div>
     );
