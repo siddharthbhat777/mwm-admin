@@ -6,7 +6,7 @@ import Table from '../../../ui/table/Table';
 import Pagination from '../../../ui/table/pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
-import { artists, mediaList } from '../../../../utils/dummydata';
+import { artists, mediaList, musicCategories } from '../../../../utils/dummydata';
 import MultiSelectDropdown from '../../../ui/customDropdown/multipleDropdown/MultiSelectDropdown';
 import TagsInput from '../../../ui/tagsInput/TagsInput';
 
@@ -184,18 +184,15 @@ export default Media;
 
 const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const titleRef = useRef();
-    const artistsRef = useRef();
     const fileRef = useRef();
-    const categoryRef = useRef();
     const lyricistRef = useRef();
     const directorRef = useRef();
-    const tagsRef = useRef();
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState(null);
     const [selectedArtistsOptions, setSelectedArtistsOptions] = useState([]);
+    const [selectedCategoryOptions, setSelectedCategoryOptions] = useState([]);
     const [tags, setTags] = useState([]);
-    console.log(selectedArtistsOptions);
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
@@ -207,16 +204,20 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     };
 
     const handleCreateSubmit = async () => {
-        const data = {
-            title: titleRef.current.value,
-            artists: artistsRef.current.value,
-            file_path: fileRef.current.value,
-            category: categoryRef.current.value,
-            lyricist: lyricistRef.current.value,
-            director: directorRef.current.value,
-            tags: tagsRef.current.value
-        };
-        console.log(data);
+        const formData = new FormData();
+        formData.append('title', titleRef.current.value);
+        selectedArtistsOptions.forEach(artist => {
+            formData.append('artists', artist);
+        });
+        formData.append('file', fileRef.current.files[0]);
+        selectedCategoryOptions.forEach(category => {
+            formData.append('category', category);
+        });
+        formData.append('lyricist', lyricistRef.current.value);
+        formData.append('director', directorRef.current.value);
+        tags.forEach(tag => {
+            formData.append('tags', tag);
+        });
         try {
             if (!titleRef.current.value) {
                 const error = new Error('Please enter required field');
@@ -249,9 +250,13 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         setSelectedArtistsOptions(updatedOptions);
     };
 
+    const handleCategorySelectionChange = (updatedOptions) => {
+        setSelectedCategoryOptions(updatedOptions);
+    };
+
     const selectedTags = tags => {
-		setTags(tags);
-	};
+        setTags(tags);
+    };
 
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.3 }} className={classes.mainCreateContainer}>
@@ -267,21 +272,18 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.formLayoutContainer}>
                 <div className={classes.formContainer}>
                     <div className={classes.formRowContainer}>
-                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Title' ref={titleRef} />
+                        <input type='text' className={`${classes.formInput} ${classes.largeInputSize}`} placeholder='Title' ref={titleRef} />
                     </div>
                     <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} />
                     <div className={classes.formRowContainer}>
-                        <input type='file' className={`${classes.formInput} ${classes.smallInputSize}`} ref={fileRef} />
-                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Category' ref={categoryRef} />
+                        <input type='file' className={`${classes.formInput} ${classes.largeInputSize}`} ref={fileRef} />
                     </div>
+                    <MultiSelectDropdown header={'Category'} options={musicCategories} selectedOptions={selectedCategoryOptions} handleSelection={handleCategorySelectionChange} />
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Lyricist' ref={lyricistRef} />
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Director' ref={directorRef} />
                     </div>
-                    <div className={classes.formRowContainer}>
-                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Tags' ref={tagsRef} />
-                    </div>
-                    <TagsInput selectedTags={selectedTags}  tagsInput={tags} />
+                    <TagsInput selectedTags={selectedTags} tagsInput={tags} header={'tags'} />
                     <button onClick={handleCreateSubmit} className={classes.createButton}>Create</button>
                 </div>
             </motion.div>

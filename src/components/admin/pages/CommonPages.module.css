@@ -249,6 +249,7 @@
     padding: 0.5rem;
     border: none;
     border-radius: 0.5rem;
+    background-color: white;
     box-shadow: #00000026 0rem 0.125rem 0.5rem;
     font-family: 'Roboto', sans-serif;
 }

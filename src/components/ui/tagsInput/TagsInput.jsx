@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import classes from './TagsInput.module.css';
 
-const TagsInput = ({ selectedTags, tagsInput }) => {
+const TagsInput = ({ selectedTags, tagsInput, header }) => {
     const [tags, setTags] = useState(tagsInput);
 
     const removeTags = indexToRemove => {
@@ -30,7 +30,7 @@ const TagsInput = ({ selectedTags, tagsInput }) => {
                     ))
                 }
             </ul>
-            <input type="text" onKeyUp={event => event.key === "Enter" ? addTags(event) : null} placeholder="Press enter to add tags" />
+            <input type="text" onKeyUp={event => event.key === "Enter" ? addTags(event) : null} placeholder={`Press enter to add ${header}`} />
         </div>
     );
 };

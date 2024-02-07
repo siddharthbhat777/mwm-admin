@@ -609,3 +609,26 @@ export const artists = [
     "Ariana Grande",
     "Michael Jackson"
 ];
+
+export const musicCategories = [
+    "Pop",
+    "Rock",
+    "Hip Hop",
+    "Jazz",
+    "Classical",
+    "Country",
+    "Electronic",
+    "R&B",
+    "Reggae",
+    "Folk",
+    "Blues",
+    "Metal",
+    "Indie",
+    "Alternative",
+    "Punk",
+    "Soul",
+    "Funk",
+    "Gospel",
+    "EDM",
+    "World"
+];
