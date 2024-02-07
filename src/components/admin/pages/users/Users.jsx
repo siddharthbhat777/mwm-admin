@@ -76,7 +76,7 @@ const Users = () => {
         setShowLoader(true);
         const gettingUsers = async () => {
             try {
-                const users = await axios.get('http://mwm.met.edu/api/auth/get-all-users');
+                const users = await axios.get('https://mwm.met.edu/api/auth/get-all-users');
                 setData(users.data.users);
             } catch (error) {
                 if (error.response) {
@@ -135,7 +135,7 @@ const Users = () => {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            await axios.post('http://localhost:5000/api/auth/upload-file', formData, {
+            await axios.post('https://localhost:5000/api/auth/upload-file', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -287,7 +287,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                 error.statusCode = 422;
                 throw error;
             }
-            await axios.post('http://mwm.met.edu/api/auth/register', data);
+            await axios.post('https://mwm.met.edu/api/auth/register', data);
             setRefreshList(true);
             setOpenCreate(false);
         } catch (error) {
@@ -369,7 +369,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const handleSubmitAlert = async () => {
         if (deleteId.length !== 0) {
             try {
-                await axios.delete(`http://mwm.met.edu/api/auth/delete-user/${deleteId}`);
+                await axios.delete(`https://mwm.met.edu/api/auth/delete-user/${deleteId}`);
                 setShowAlert(false);
                 setOpenDetails(false);
                 setRefreshList(true);
@@ -434,7 +434,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
             email: emailRef.current.value
         };
         try {
-            await axios.put(`http://mwm.met.edu/api/auth/update-user/${id}`, data)
+            await axios.put(`https://mwm.met.edu/api/auth/update-user/${id}`, data)
             setEditMode(false);
             setOpenDetails(false);
             setRefreshList(true);
