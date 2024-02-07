@@ -53,11 +53,6 @@ const Navbar = () => {
         setIsMenuOpen(false);
     };
 
-    const handleAlbum = () => {
-        navigate('/admin/album');
-        setIsMenuOpen(false);
-    };
-
     useEffect(() => {
         if (!localStorage.getItem('email')) {
             navigate('/admin/login');
@@ -144,13 +139,6 @@ const Navbar = () => {
                                 <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1ZM10 8a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V8Zm-6 4a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1Zm4-3a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z" />
                             </svg>
                             <span>Artist</span>
-                        </div>
-
-                        <div className={classes.menuItem} onClick={handleAlbum}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-disc-fill" viewBox="0 0 16 16">
-                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-6 0a2 2 0 1 0-4 0 2 2 0 0 0 4 0M4 8a4 4 0 0 1 4-4 .5.5 0 0 0 0-1 5 5 0 0 0-5 5 .5.5 0 0 0 1 0m9 0a.5.5 0 1 0-1 0 4 4 0 0 1-4 4 .5.5 0 0 0 0 1 5 5 0 0 0 5-5" />
-                            </svg>
-                            <span>Album</span>
                         </div>
                     </div>
                 }

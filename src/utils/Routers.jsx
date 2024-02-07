@@ -11,7 +11,6 @@ import Media from '../components/admin/pages/media/Media';
 import Playlist from '../components/admin/pages/playlist/Playlist';
 import Category from '../components/admin/pages/category/Category';
 import Artist from '../components/admin/pages/artist/Artist';
-import Album from '../components/admin/pages/album/Album';
 
 const Routers = () => {
     return (
@@ -25,7 +24,6 @@ const Routers = () => {
                     <Route path='playlist' element={<Playlist />} />
                     <Route path='category' element={<Category />} />
                     <Route path='artist' element={<Artist />} />
-                    <Route path='album' element={<Album />} />
                 </Route>
                 <Route path='login' element={<LoginUser />} />
                 <Route path='/' element={<LayoutUser />}>
