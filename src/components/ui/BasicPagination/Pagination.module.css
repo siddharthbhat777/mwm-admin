@@ -1,0 +1,5 @@
+.rowRange {
+    width: 6rem;
+    font-weight: 500;
+    color: var(--dark-component-color);
+}
