@@ -1,10 +1,12 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import classes from '../CommonData.module.css';
 import Loader from '../../../ui/loader/Loader';
 import Pagination from '../../../ui/BasicPagination/Pagination';
 
 const Artist = () => {
+    const artistNameRef = useRef();
+
     const [showLoader, setShowLoader] = useState(false);
     const [refreshList, setRefreshList] = useState(false);
     const [data, setData] = useState([]);
@@ -12,6 +14,7 @@ const Artist = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [numberOfRows, setNumberOfRows] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
+    const [openAddContent, setOpenAddContent] = useState(false);
 
     useEffect(() => {
         const delay = 1000;
@@ -83,23 +86,60 @@ const Artist = () => {
         setCurrentPage(1);
     };
 
+    const handleAddArtist = async () => {
+        console.log('testuing');
+        try {
+            await axios.post('https://mwm.met.edu/api/artists/add', { name: artistNameRef.current.value });
+            setOpenAddContent(false);
+            setRefreshList(true);
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
     return (
         <div className={classes.fullscreen}>
             <div className={classes.topContainer}>
-                <button className={classes.addArtist}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                    </svg>
-                    <span>Add Artist</span>
-                </button>
-                <div className={classes.searchBox}>
-                    <div className={classes.searchIcon}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                        </svg>
-                    </div>
-                    <input type='text' placeholder='Search here' className={classes.searchInput} onChange={(e) => setSearchQuery(e.target.value)} />
-                </div>
+                {
+                    openAddContent ?
+                        <div className={classes.addContentLayout}>
+                            <input className={classes.addContentInput} type="text" placeholder='Artist name' ref={artistNameRef} />
+                            <button className={classes.addContentSubmit} onClick={handleAddArtist}>Add</button>
+                            <button className={classes.addContentCancel} onClick={() => setOpenAddContent(false)}>Cancel</button>
+                        </div>
+                        :
+                        <button className={classes.addContent} onClick={() => setOpenAddContent(true)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                            </svg>
+                            <span>Add Artist</span>
+                        </button>
+                }
+                {
+                    window.innerWidth < 480 ?
+                        <Fragment>
+                            {
+                                !openAddContent &&
+                                <div className={classes.searchBox}>
+                                    <div className={classes.searchIcon}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                        </svg>
+                                    </div>
+                                    <input type='text' placeholder='Search here' className={classes.searchInput} onChange={(e) => setSearchQuery(e.target.value)} />
+                                </div>
+                            }
+                        </Fragment>
+                        :
+                        <div className={classes.searchBox}>
+                            <div className={classes.searchIcon}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </div>
+                            <input type='text' placeholder='Search here' className={classes.searchInput} onChange={(e) => setSearchQuery(e.target.value)} />
+                        </div>
+                }
             </div>
             <div className={classes.mainSection}>
                 {
