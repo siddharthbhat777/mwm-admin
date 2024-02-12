@@ -3,6 +3,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import classes from '../CommonData.module.css';
 import Loader from '../../../ui/loader/Loader';
 import Pagination from '../../../ui/BasicPagination/Pagination';
+import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
 
 const Artist = () => {
     const artistNameRef = useRef();
@@ -17,6 +18,24 @@ const Artist = () => {
     const [openAddContent, setOpenAddContent] = useState(false);
     const [openEditLayout, setOpenEditLayout] = useState(null);
     const [updatedArtistName, setUpdatedArtistName] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [deleteId, setDeleteId] = useState();
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+    };
+
+    const handleSubmitAlert = async () => {
+        if (deleteId.length !== 0) {
+            try {
+                await axios.delete(`https://mwm.met.edu/api/artists/delete/${deleteId}`);
+                setShowAlert(false);
+                setRefreshList(true);
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
+    };
 
     useEffect(() => {
         const delay = 1000;
@@ -108,8 +127,14 @@ const Artist = () => {
         }
     };
 
+    const handleDeleteData = (id) => {
+        setDeleteId(id);
+        setShowAlert(true);
+    };
+
     return (
         <div className={classes.fullscreen}>
+            {showAlert && <YesNoAlert message={{ header: 'Delete', submessage: 'Do you really want to delete?' }} onClose={handleCloseAlert} onSubmit={handleSubmitAlert} />}
             <div className={classes.topContainer}>
                 {
                     openAddContent ?
@@ -181,7 +206,7 @@ const Artist = () => {
                                         </Fragment>
                                 }
                             </div>
-                            <button className={classes.deleteButton}>
+                            <button className={classes.deleteButton} onClick={() => handleDeleteData(artist._id)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
                                     <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
                                 </svg>
