@@ -40,7 +40,7 @@ const Artist = () => {
     useEffect(() => {
         const delay = 1000;
         setShowLoader(true);
-        const gettingUsers = async () => {
+        const gettingArtists = async () => {
             try {
                 const artists = await axios.get('https://mwm.met.edu/api/artists/all');
                 setData(artists.data.artists);
@@ -59,7 +59,7 @@ const Artist = () => {
             }
         };
         const debounce = setTimeout(() => {
-            gettingUsers();
+            gettingArtists();
             setShowLoader(false);
         }, delay);
 
@@ -69,10 +69,10 @@ const Artist = () => {
     }, [refreshList]);
 
     useEffect(() => {
-        const filteredData = data.filter((requisition) => {
+        const filteredData = data.filter((artist) => {
             const searchFields = ['name'];
             return searchFields.some((field) =>
-                String(requisition[field]).toLowerCase().includes(searchQuery.toLowerCase())
+                String(artist[field]).toLowerCase().includes(searchQuery.toLowerCase())
             );
         });
         if (filteredData.length !== 0) {

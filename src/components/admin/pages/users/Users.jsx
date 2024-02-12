@@ -45,10 +45,10 @@ const Users = () => {
     }, [location]);
 
     useEffect(() => {
-        const filteredData = data.filter((requisition) => {
+        const filteredData = data.filter((user) => {
             const searchFields = ['firstname', 'lastname', 'email', 'institute', 'year'];
             return searchFields.some((field) =>
-                String(requisition[field]).toLowerCase().includes(searchQuery.toLowerCase())
+                String(user[field]).toLowerCase().includes(searchQuery.toLowerCase())
             );
         });
         if (filteredData.length !== 0) {
