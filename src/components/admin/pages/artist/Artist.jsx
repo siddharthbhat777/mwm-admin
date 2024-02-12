@@ -15,6 +15,8 @@ const Artist = () => {
     const [numberOfRows, setNumberOfRows] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [openAddContent, setOpenAddContent] = useState(false);
+    const [openEditLayout, setOpenEditLayout] = useState(null);
+    const [updatedArtistName, setUpdatedArtistName] = useState('');
 
     useEffect(() => {
         const delay = 1000;
@@ -87,10 +89,19 @@ const Artist = () => {
     };
 
     const handleAddArtist = async () => {
-        console.log('testuing');
         try {
             await axios.post('https://mwm.met.edu/api/artists/add', { name: artistNameRef.current.value });
             setOpenAddContent(false);
+            setRefreshList(true);
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
+    const handleEditArtist = async (id) => {
+        try {
+            await axios.put(`https://mwm.met.edu/api/artists/update/${id}`, { name: updatedArtistName });
+            setOpenEditLayout(false);
             setRefreshList(true);
         } catch (error) {
             console.log(error.message);
@@ -109,8 +120,8 @@ const Artist = () => {
                         </div>
                         :
                         <button className={classes.addContent} onClick={() => setOpenAddContent(true)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
                             </svg>
                             <span>Add Artist</span>
                         </button>
@@ -149,15 +160,26 @@ const Artist = () => {
                 {
                     !showLoader &&
                     displayedData.map((artist) => (
-                        <div className={classes.singleEntry}>
+                        <div key={artist._id} className={classes.singleEntry}>
                             <div className={classes.heading}>
-                                <span className={classes.headingName}>{artist.name}</span>
-                                <div className={classes.editEntry}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
-                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                        <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                    </svg>
-                                </div>
+                                {
+                                    openEditLayout && (openEditLayout === artist._id) ?
+                                        <div className={classes.editContentLayout}>
+                                            <input className={classes.editContentInput} type="text" placeholder='Artist name' defaultValue={artist.name} onChange={(e) => setUpdatedArtistName(e.target.value)} />
+                                            <button className={classes.editContentSubmit} onClick={() => handleEditArtist(artist._id)}>Edit</button>
+                                            <button className={classes.editContentCancel} onClick={() => setOpenEditLayout(null)}>Cancel</button>
+                                        </div>
+                                        :
+                                        <Fragment>
+                                            <span className={classes.headingName}>{artist.name}</span>
+                                            <div className={classes.editEntry} onClick={() => setOpenEditLayout(artist._id)}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                    <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                                </svg>
+                                            </div>
+                                        </Fragment>
+                                }
                             </div>
                             <button className={classes.deleteButton}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
