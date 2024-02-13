@@ -402,6 +402,10 @@
     text-align: right;
     font-weight: 700;
     color: var(--dark-component-color);
+    width: 20vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .flexBr {
@@ -544,7 +548,10 @@
         gap: 0.5rem;
     }
 
-    .smallestInputSize, .smallerInputSize, .smallInputSize, .mediumInputSize {
+    .smallestInputSize,
+    .smallerInputSize,
+    .smallInputSize,
+    .mediumInputSize {
         width: calc(46vw - 1rem);
     }
 

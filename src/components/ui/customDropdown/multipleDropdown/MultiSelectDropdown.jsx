@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import classes from "./MultiSelectDropdown.module.css";
 
-function MultiSelectDropdown({ header, options, selectedOptions, handleSelection, width }) {
+function MultiSelectDropdown({ header, options, selectedOptions, handleSelection, labelKey }) {
   const [expanded, setExpanded] = useState(false);
 
   const showCheckboxes = () => {
@@ -32,11 +32,11 @@ function MultiSelectDropdown({ header, options, selectedOptions, handleSelection
             <label key={index} htmlFor={option}>
               <input
                 type="checkbox"
-                id={option}
-                checked={selectedOptions.includes(option)}
-                onChange={() => handleCheckboxChange(option)}
+                id={option._id}
+                checked={selectedOptions.includes(option._id)}
+                onChange={() => handleCheckboxChange(option._id)}
               />{" "}
-              {option}
+              {option[labelKey]}
             </label>
           ))}
         </div>

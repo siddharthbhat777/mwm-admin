@@ -6,9 +6,9 @@ import Table from '../../../ui/table/Table';
 import Pagination from '../../../ui/table/pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
-import { artists, mediaList, musicCategories } from '../../../../utils/dummydata';
 import MultiSelectDropdown from '../../../ui/customDropdown/multipleDropdown/MultiSelectDropdown';
 import TagsInput from '../../../ui/tagsInput/TagsInput';
+import axios from 'axios';
 
 const Media = () => {
     const location = useLocation();
@@ -72,10 +72,10 @@ const Media = () => {
     useEffect(() => {
         const delay = 1000;
         setShowLoader(true);
-        const gettingRequisitions = async () => {
+        const gettingMedia = async () => {
             try {
-                // const requisitions = await axios.get('http://localhost:8001/api/purchase/requisition/');
-                setData(mediaList);
+                const media = await axios.get('https://mwm.met.edu/api/media/all');
+                setData(media.data.media);
             } catch (error) {
                 if (error.response) {
                     if (error.response.status === 500) {
@@ -91,7 +91,7 @@ const Media = () => {
             }
         };
         const debounce = setTimeout(() => {
-            gettingRequisitions();
+            gettingMedia();
             setShowLoader(false);
         }, delay);
 
@@ -193,6 +193,8 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const [selectedArtistsOptions, setSelectedArtistsOptions] = useState([]);
     const [selectedCategoryOptions, setSelectedCategoryOptions] = useState([]);
     const [tags, setTags] = useState([]);
+    const [artists, setArtists] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
@@ -202,6 +204,20 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const handleCloseAlert = () => {
         setShowAlert(false);
     };
+
+    useEffect(() => {
+        const getArtistCategories = async () => {
+            try {
+                const artists = await axios.get('https://mwm.met.edu/api/artists/all');
+                const categories = await axios.get('https://mwm.met.edu/api/categories/all-categories');
+                setArtists(artists.data.artists);
+                setCategories(categories.data.categories);
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+        getArtistCategories();
+    }, []);
 
     const handleCreateSubmit = async () => {
         const formData = new FormData();
@@ -224,7 +240,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                 error.statusCode = 422;
                 throw error;
             }
-            // await axios.post('http://localhost:8001/api/purchase/requisition/createrequisition', data);
+            await axios.post('https://mwm.met.edu/api/media/add', formData);
             setRefreshList(true);
             setOpenCreate(false);
         } catch (error) {
@@ -274,11 +290,11 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.largeInputSize}`} placeholder='Title' ref={titleRef} />
                     </div>
-                    <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} />
+                    <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} labelKey={'name'} />
                     <div className={classes.formRowContainer}>
                         <input type='file' className={`${classes.formInput} ${classes.largeInputSize}`} ref={fileRef} />
                     </div>
-                    <MultiSelectDropdown header={'Category'} options={musicCategories} selectedOptions={selectedCategoryOptions} handleSelection={handleCategorySelectionChange} />
+                    <MultiSelectDropdown header={'Category'} options={categories} selectedOptions={selectedCategoryOptions} handleSelection={handleCategorySelectionChange} labelKey={'category_name'} />
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Lyricist' ref={lyricistRef} />
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Director' ref={directorRef} />
