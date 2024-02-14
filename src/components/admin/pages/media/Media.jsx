@@ -173,7 +173,7 @@ const Media = () => {
             <AnimatePresence>
                 {
                     openDetails &&
-                    <DetailsView setOpenDetails={setOpenDetails} detailsData={selectedRowData} />
+                    <DetailsView setOpenDetails={setOpenDetails} detailsData={selectedRowData} setRefreshList={setRefreshList} />
                 }
             </AnimatePresence>
         </div>
@@ -307,8 +307,32 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     );
 };
 
-const DetailsView = ({ setOpenDetails, detailsData }) => {
+const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
+    const fileRef = useRef();
+
+    const [title, setTitle] = useState(detailsData.title);
     const [editMode, setEditMode] = useState(false);
+    const [selectedArtistsOptions, setSelectedArtistsOptions] = useState(detailsData.artists.map(artist => artist._id));
+    const [selectedCategoryOptions, setSelectedCategoryOptions] = useState(detailsData.category.map(singleCategory => singleCategory._id));
+    const [artists, setArtists] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [lyricist, setLyricist] = useState(detailsData.lyricist);
+    const [director, setDirector] = useState(detailsData.director);
+    const [tags, setTags] = useState(detailsData.tags);
+
+    useEffect(() => {
+        const getArtistCategories = async () => {
+            try {
+                const artists = await axios.get('https://mwm.met.edu/api/artists/all');
+                const categories = await axios.get('https://mwm.met.edu/api/categories/all-categories');
+                setArtists(artists.data.artists);
+                setCategories(categories.data.categories);
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+        getArtistCategories();
+    }, []);
 
     const formatDateTime = (createdAt) => {
         if (createdAt === null) {
@@ -336,6 +360,42 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
         return `${formattedDate} ${formattedTime}`;
     };
 
+    const handleArtistsSelectionChange = (updatedOptions) => {
+        setSelectedArtistsOptions(updatedOptions);
+    };
+
+    const handleCategorySelectionChange = (updatedOptions) => {
+        setSelectedCategoryOptions(updatedOptions);
+    };
+
+    const selectedTags = tags => {
+        setTags(tags);
+    };
+
+    const handleEditSubmit = async (id) => {
+        const formData = new FormData();
+        formData.append('title', title);
+        selectedArtistsOptions.forEach(artist => {
+            formData.append('artists', artist);
+        });
+        formData.append('file', fileRef.current.files[0]);
+        selectedCategoryOptions.forEach(category => {
+            formData.append('category', category);
+        });
+        formData.append('lyricist', lyricist);
+        formData.append('director', director);
+        tags.forEach(tag => {
+            formData.append('tags', tag);
+        });
+        try {
+            await axios.put(`https://mwm.met.edu/api/media/update/${id}`, formData)
+            setOpenDetails(false);
+            setRefreshList(true);
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.2 }} className={classes.detailsViewContainer}>
             <div className={classes.detailsContainer}>
@@ -345,7 +405,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                     </svg>
                 </motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.details}>
-                    <span>{editMode ? 'Edit Media Details' : 'Media Details'}</span>
+                    <span className={classes.detailsHeading}>{editMode ? 'Edit Media Details' : 'Media Details'}</span>
                     <hr className={classes.detailsSectionHr} />
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>Media creation date: </header>
@@ -355,7 +415,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                         <header className={classes.detailsData}>Title: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Title' defaultValue={detailsData.title} />
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Title' defaultValue={detailsData.title} onChange={(e) => setTitle(e.target.value)} />
                                 :
                                 <data>{detailsData.title}</data>
                         }
@@ -364,16 +424,16 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                         <header className={classes.detailsData}>Artists: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Artists' defaultValue={detailsData.artists} />
+                                <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} labelKey={'name'} />
                                 :
-                                <data>{detailsData.artists}</data>
+                                <data>{detailsData.artists.map(artist => artist.name).toString()}</data>
                         }
                     </div>
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>Media file: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='File' defaultValue={detailsData.file_path} />
+                                <input type='file' className={`${classes.formInput} ${classes.smallerInputSize}`} ref={fileRef} />
                                 :
                                 <data>{detailsData.file_path}</data>
                         }
@@ -382,16 +442,16 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                         <header className={classes.detailsData}>Category: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Category' defaultValue={detailsData.category} />
+                                <MultiSelectDropdown header={'Category'} options={categories} selectedOptions={selectedCategoryOptions} handleSelection={handleCategorySelectionChange} labelKey={'category_name'} />
                                 :
-                                <data>{detailsData.category}</data>
+                                <data>{detailsData.category.map(category => category.category_name).toString()}</data>
                         }
                     </div>
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>Lyricist: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Lyricist' defaultValue={detailsData.lyricist} />
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Lyricist' defaultValue={detailsData.lyricist} onChange={(e) => setLyricist(e.target.value)} />
                                 :
                                 <data>{detailsData.lyricist}</data>
                         }
@@ -400,7 +460,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                         <header className={classes.detailsData}>Director: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Director' defaultValue={detailsData.director} />
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Director' defaultValue={detailsData.director} onChange={(e) => setDirector(e.target.value)} />
                                 :
                                 <data>{detailsData.director}</data>
                         }
@@ -421,9 +481,9 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                         <header className={classes.detailsData}>Tags: </header>
                         {
                             editMode ?
-                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Tags' defaultValue={detailsData.tags} />
+                            <TagsInput selectedTags={selectedTags} tagsInput={tags} header={'tags'} />
                                 :
-                                <data>{detailsData.tags}</data>
+                                <data>{detailsData.tags.toString()}</data>
                         }
                     </div>
                 </motion.div>
@@ -431,7 +491,7 @@ const DetailsView = ({ setOpenDetails, detailsData }) => {
                     {
                         editMode ?
                             <Fragment>
-                                <button className={classes.editButton} onClick={() => setEditMode(true)}>Save changes &nbsp;
+                                <button className={classes.editButton} onClick={() => handleEditSubmit(detailsData._id)}>Save changes &nbsp;
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-floppy2" viewBox="0 0 16 16">
                                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z" />
                                     </svg>

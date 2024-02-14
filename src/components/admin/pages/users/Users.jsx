@@ -457,7 +457,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                     </svg>
                 </motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.details}>
-                    <span>{editMode ? 'Edit User Details' : 'User Details'}</span>
+                    <span className={classes.detailsHeading}>{editMode ? 'Edit User Details' : 'User Details'}</span>
                     <hr className={classes.detailsSectionHr} />
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>User creation date: </header>

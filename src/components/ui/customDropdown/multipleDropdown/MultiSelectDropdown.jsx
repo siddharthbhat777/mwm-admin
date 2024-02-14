@@ -7,7 +7,9 @@ function MultiSelectDropdown({ header, options, selectedOptions, handleSelection
   const showCheckboxes = () => {
     setExpanded(!expanded);
   };
+
   const handleCheckboxChange = (option) => {
+    console.log(option);
     const updatedOptions = selectedOptions.includes(option)
       ? selectedOptions.filter((item) => item !== option)
       : [...selectedOptions, option];
