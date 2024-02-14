@@ -9,6 +9,7 @@ import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
 import MultiSelectDropdown from '../../../ui/customDropdown/multipleDropdown/MultiSelectDropdown';
 import TagsInput from '../../../ui/tagsInput/TagsInput';
 import axios from 'axios';
+import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
 
 const Media = () => {
     const location = useLocation();
@@ -319,6 +320,25 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const [lyricist, setLyricist] = useState(detailsData.lyricist);
     const [director, setDirector] = useState(detailsData.director);
     const [tags, setTags] = useState(detailsData.tags);
+    const [showAlert, setShowAlert] = useState(false);
+    const [deleteId] = useState(detailsData._id);
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+    };
+
+    const handleSubmitAlert = async () => {
+        if (deleteId.length !== 0) {
+            try {
+                await axios.delete(`https://mwm.met.edu/api/media/${deleteId}`);
+                setShowAlert(false);
+                setOpenDetails(false);
+                setRefreshList(true);
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
+    };
 
     useEffect(() => {
         const getArtistCategories = async () => {
@@ -396,9 +416,14 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
         }
     };
 
+    const handleDeleteUser = () => {
+        setShowAlert(true);
+    };
+
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.2 }} className={classes.detailsViewContainer}>
             <div className={classes.detailsContainer}>
+            {showAlert && <YesNoAlert message={{ header: 'Delete', submessage: 'Do you really want to delete?' }} onClose={handleCloseAlert} onSubmit={handleSubmitAlert} />}
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.closeButtonContainer} onClick={() => setOpenDetails(false)}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
@@ -510,7 +535,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                                         <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                                     </svg>
                                 </button>
-                                <button className={classes.deleteButton}>Delete &nbsp;
+                                <button className={classes.deleteButton} onClick={() => handleDeleteUser(detailsData._id)}>Delete &nbsp;
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
                                         <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
                                     </svg>
