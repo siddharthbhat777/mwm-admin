@@ -186,6 +186,7 @@ export default Media;
 const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const titleRef = useRef();
     const fileRef = useRef();
+    const thumbnailRef = useRef();
     const lyricistRef = useRef();
     const directorRef = useRef();
 
@@ -227,6 +228,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
             formData.append('artists', artist);
         });
         formData.append('file', fileRef.current.files[0]);
+        formData.append('thumbnail', thumbnailRef.current.files[0]);
         selectedCategoryOptions.forEach(category => {
             formData.append('category', category);
         });
@@ -293,7 +295,10 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                     </div>
                     <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} labelKey={'name'} />
                     <div className={classes.formRowContainer}>
-                        <input type='file' className={`${classes.formInput} ${classes.largeInputSize}`} ref={fileRef} />
+                        <span className={classes.createFieldHeader}>Media file: </span><input type='file' className={`${classes.formInput} ${classes.mediumInputSize}`} ref={fileRef} />
+                    </div>
+                    <div className={classes.formRowContainer}>
+                        <span className={classes.createFieldHeader}>Thumbnail: </span><input type='file' className={`${classes.formInput} ${classes.mediumInputSize}`} ref={thumbnailRef} />
                     </div>
                     <MultiSelectDropdown header={'Category'} options={categories} selectedOptions={selectedCategoryOptions} handleSelection={handleCategorySelectionChange} labelKey={'category_name'} />
                     <div className={classes.formRowContainer}>

@@ -48,6 +48,13 @@
     justify-content: center;
 }
 
+.createFieldHeader {
+    color: white;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+}
+
 .topCreateButton {
     max-width: 7rem;
     align-items: center;
