@@ -1,0 +1,21 @@
+.mainLayout {
+    height: 100vh;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 15% auto;
+}
+
+.rightLayout {
+    display: grid;
+    grid-template-rows: 6% auto;
+}
+
+.content {
+    background-color: var(--darker-gray-color);
+}
+
+@media screen and (max-width: 1024px) {
+    .mainLayout {
+        grid-template-columns: auto;
+    }
+}

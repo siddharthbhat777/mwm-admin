@@ -11,6 +11,8 @@ import Media from '../components/admin/pages/media/Media';
 import Playlist from '../components/admin/pages/playlist/Playlist';
 import Category from '../components/admin/pages/category/Category';
 import Artist from '../components/admin/pages/artist/Artist';
+import DynamicFeed from '../components/user/pages/dynamicFeed/DynamicFeed';
+import Video from '../components/user/pages/video/Video';
 
 const Routers = () => {
     return (
@@ -28,6 +30,10 @@ const Routers = () => {
                 <Route path='login' element={<LoginUser />} />
                 <Route path='/' element={<LayoutUser />}>
                     <Route index element={<DashboardUser />} />
+                    <Route path='/:categoryId'>
+                        <Route index element={<DynamicFeed />} />
+                        <Route path='/:categoryId/:mediaId' element={<Video />} />
+                    </Route>
                 </Route>
             </Routes>
         </Router>
