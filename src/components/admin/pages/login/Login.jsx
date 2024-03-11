@@ -7,7 +7,7 @@ import ls from 'localstorage-slim';
 
 const Login = () => {
     const navigate = useNavigate();
-    const emailRef = useRef();
+    const usernameRef = useRef();
     const passwordRef = useRef();
 
     const [showPassword, setShowPassword] = useState(false);
@@ -19,8 +19,9 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (emailRef.current.value === 'admin@met.edu' && passwordRef.current.value === 'admin') {
-            ls.set('email', emailRef.current.value, { encrypt: true });
+        if (usernameRef.current.value === 'mwmadmin' && passwordRef.current.value === 'admin') {
+            ls.set('username', usernameRef.current.value, { encrypt: true });
+            localStorage.setItem('userType', 'admin');
             navigate('/admin');
         } else {
             setShowAlert(true);
@@ -28,8 +29,12 @@ const Login = () => {
     };
 
     useEffect(() => {
-        if (ls.get('email', { decrypt: true })) {
-            navigate('/admin');
+        if (ls.get('username', { decrypt: true })) {
+            if (localStorage.getItem('userType') === 'admin') {
+                navigate('/admin');
+            } else if (localStorage.getItem('userType') === 'others') {
+                navigate('/');
+            }
         }
     }, [navigate]);
 
@@ -42,9 +47,9 @@ const Login = () => {
                     <div className={classes.rightLayout}>
                         <form className={classes.loginContainer} onSubmit={handleSubmit}>
                             <img className={classes.metLogo} src={metLogo} alt='met-logo' />
-                            <input className={classes.userInput} type="email" placeholder='Enter E-Mail address' ref={emailRef} />
+                            <input className={classes.userInput} type="text" placeholder='Username' ref={usernameRef} />
                             <div className={classes.userPassword}>
-                                <input className={classes.userInput} type={showPassword ? 'text' : 'password'} placeholder='Enter password' ref={passwordRef} />
+                                <input className={classes.userInput} type={showPassword ? 'text' : 'password'} placeholder='Password' ref={passwordRef} />
                                 <div className={classes.showPasswordButton} onClick={() => setShowPassword(!showPassword)}>
                                     {
                                         showPassword ?

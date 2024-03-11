@@ -18,8 +18,9 @@ const Navbar = () => {
     };
 
     const handleSubmitAlert = () => {
-        ls.remove('email');
-        navigate('/admin/login');
+        ls.remove('username');
+        localStorage.removeItem('userType');
+        navigate('/login');
         setShowAlert(false);
     };
 
@@ -54,8 +55,8 @@ const Navbar = () => {
     };
 
     useEffect(() => {
-        if (!localStorage.getItem('email')) {
-            navigate('/admin/login');
+        if (!localStorage.getItem('username')) {
+            navigate('/login');
         }
     }, [navigate]);
 

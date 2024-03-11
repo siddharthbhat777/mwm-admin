@@ -85,8 +85,10 @@
     color: var(--dark-gray-color);
 }
 
-.rememberMe {
-    margin-right: 1rem;
+.alreadyRegistered {
+    cursor: pointer;
+    text-decoration: underline;
+    color: blue;
 }
 
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {

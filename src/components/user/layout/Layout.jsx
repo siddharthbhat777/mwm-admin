@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Sidebar from './sidebar/Sidebar';
 import classes from './Layout.module.css';
 import Navbar from './navbar/Navbar';
-import { Outlet } from 'react-router-dom';
-// import AuthContext from '../../context/AuthContext/AuthContext';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 const Layout = () => {
-    // const authCtx = useContext(AuthContext);
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
-    /* useEffect(() => {
-        if (!(localStorage.getItem('accessToken') && authCtx.isLoggedIn)) {
+    useEffect(() => {
+        if (localStorage.getItem('username')) {
+            if (localStorage.userType === 'admin') {
+                navigate('/admin');
+            }
+        } else {
             navigate('/login');
         }
-    }, [authCtx.isLoggedIn, navigate]); */
+    }, [navigate]);
 
     return (
         <div className={classes.mainLayout}>
