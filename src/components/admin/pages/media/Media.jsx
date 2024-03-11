@@ -10,6 +10,7 @@ import MultiSelectDropdown from '../../../ui/customDropdown/multipleDropdown/Mul
 import TagsInput from '../../../ui/tagsInput/TagsInput';
 import axios from 'axios';
 import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
+import ReturnKeyDropdown from '../../../ui/customDropdown/returnKeyDropdown/ReturnKeyDropdown';
 
 const Media = () => {
     const location = useLocation();
@@ -193,7 +194,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState(null);
     const [selectedArtistsOptions, setSelectedArtistsOptions] = useState([]);
-    const [selectedCategoryOptions, setSelectedCategoryOptions] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
     const [tags, setTags] = useState([]);
     const [artists, setArtists] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -213,7 +214,9 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                 const artists = await axios.get('https://mwm.met.edu/api/artists/all');
                 const categories = await axios.get('https://mwm.met.edu/api/categories/all-categories');
                 setArtists(artists.data.artists);
-                setCategories(categories.data.categories);
+                setCategories(categories.data.categories.map(category => {
+                    return { key: category._id, name: category.category_name };
+                }));
             } catch (error) {
                 console.log(error.message);
             }
@@ -229,9 +232,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         });
         formData.append('file', fileRef.current.files[0]);
         formData.append('thumbnail', thumbnailRef.current.files[0]);
-        selectedCategoryOptions.forEach(category => {
-            formData.append('category', category);
-        });
+        formData.append('category', selectedCategory);
         formData.append('lyricist', lyricistRef.current.value);
         formData.append('director', directorRef.current.value);
         tags.forEach(tag => {
@@ -269,12 +270,12 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         setSelectedArtistsOptions(updatedOptions);
     };
 
-    const handleCategorySelectionChange = (updatedOptions) => {
-        setSelectedCategoryOptions(updatedOptions);
-    };
-
     const selectedTags = tags => {
         setTags(tags);
+    };
+
+    const handleCategorySelect = (value) => {
+        setSelectedCategory(value);
     };
 
     return (
@@ -293,14 +294,16 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.largeInputSize}`} placeholder='Title' ref={titleRef} />
                     </div>
-                    <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} labelKey={'name'} />
+                    <div className={classes.formRowContainer}>
+                        <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} labelKey={'name'} />
+                        <ReturnKeyDropdown defaultText={'Category'} options={categories} onSelect={handleCategorySelect} />
+                    </div>
                     <div className={classes.formRowContainer}>
                         <span className={classes.createFieldHeader}>Media file: </span><input type='file' className={`${classes.formInput} ${classes.mediumInputSize}`} ref={fileRef} />
                     </div>
                     <div className={classes.formRowContainer}>
                         <span className={classes.createFieldHeader}>Thumbnail: </span><input type='file' className={`${classes.formInput} ${classes.mediumInputSize}`} ref={thumbnailRef} />
                     </div>
-                    <MultiSelectDropdown header={'Category'} options={categories} selectedOptions={selectedCategoryOptions} handleSelection={handleCategorySelectionChange} labelKey={'category_name'} />
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Lyricist' ref={lyricistRef} />
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Director' ref={directorRef} />
@@ -315,11 +318,12 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 
 const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const fileRef = useRef();
+    const thumbnailRef = useRef();
 
     const [title, setTitle] = useState(detailsData.title);
     const [editMode, setEditMode] = useState(false);
     const [selectedArtistsOptions, setSelectedArtistsOptions] = useState(detailsData.artists.map(artist => artist._id));
-    const [selectedCategoryOptions, setSelectedCategoryOptions] = useState(detailsData.category.map(singleCategory => singleCategory._id));
+    const [selectedCategory, setSelectedCategory] = useState('');
     const [artists, setArtists] = useState([]);
     const [categories, setCategories] = useState([]);
     const [lyricist, setLyricist] = useState(detailsData.lyricist);
@@ -351,7 +355,9 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                 const artists = await axios.get('https://mwm.met.edu/api/artists/all');
                 const categories = await axios.get('https://mwm.met.edu/api/categories/all-categories');
                 setArtists(artists.data.artists);
-                setCategories(categories.data.categories);
+                setCategories(categories.data.categories.map(category => {
+                    return { key: category._id, name: category.category_name };
+                }));
             } catch (error) {
                 console.log(error.message);
             }
@@ -389,10 +395,6 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
         setSelectedArtistsOptions(updatedOptions);
     };
 
-    const handleCategorySelectionChange = (updatedOptions) => {
-        setSelectedCategoryOptions(updatedOptions);
-    };
-
     const selectedTags = tags => {
         setTags(tags);
     };
@@ -404,9 +406,8 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
             formData.append('artists', artist);
         });
         formData.append('file', fileRef.current.files[0]);
-        selectedCategoryOptions.forEach(category => {
-            formData.append('category', category);
-        });
+        formData.append('thumbnail', thumbnailRef.current.files[0]);
+        formData.append('category', selectedCategory);
         formData.append('lyricist', lyricist);
         formData.append('director', director);
         tags.forEach(tag => {
@@ -425,10 +426,14 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
         setShowAlert(true);
     };
 
+    const handleCategorySelect = (value) => {
+        setSelectedCategory(value);
+    };
+
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.2 }} className={classes.detailsViewContainer}>
             <div className={classes.detailsContainer}>
-            {showAlert && <YesNoAlert message={{ header: 'Delete', submessage: 'Do you really want to delete?' }} onClose={handleCloseAlert} onSubmit={handleSubmitAlert} />}
+                {showAlert && <YesNoAlert message={{ header: 'Delete', submessage: 'Do you really want to delete?' }} onClose={handleCloseAlert} onSubmit={handleSubmitAlert} />}
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.closeButtonContainer} onClick={() => setOpenDetails(false)}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
@@ -463,18 +468,27 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>Media file: </header>
                         {
                             editMode ?
-                                <input type='file' className={`${classes.formInput} ${classes.smallerInputSize}`} ref={fileRef} />
+                                <input type='file' className={`${classes.formInput} ${classes.smallInputSize}`} ref={fileRef} />
                                 :
                                 <data>{detailsData.file_path}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Thumbnail: </header>
+                        {
+                            editMode ?
+                                <input type='file' className={`${classes.formInput} ${classes.smallInputSize}`} ref={thumbnailRef} />
+                                :
+                                <data>{detailsData.thumbnail}</data>
                         }
                     </div>
                     <div className={classes.flexBr}>
                         <header className={classes.detailsData}>Category: </header>
                         {
                             editMode ?
-                                <MultiSelectDropdown header={'Category'} options={categories} selectedOptions={selectedCategoryOptions} handleSelection={handleCategorySelectionChange} labelKey={'category_name'} />
+                            <ReturnKeyDropdown defaultText={'Category'} options={categories} onSelect={handleCategorySelect} />
                                 :
-                                <data>{detailsData.category.map(category => category.category_name).toString()}</data>
+                                <data>{detailsData.category.category_name}</data>
                         }
                     </div>
                     <div className={classes.flexBr}>
@@ -511,7 +525,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>Tags: </header>
                         {
                             editMode ?
-                            <TagsInput selectedTags={selectedTags} tagsInput={tags} header={'tags'} />
+                                <TagsInput selectedTags={selectedTags} tagsInput={tags} header={'tags'} />
                                 :
                                 <data>{detailsData.tags.toString()}</data>
                         }

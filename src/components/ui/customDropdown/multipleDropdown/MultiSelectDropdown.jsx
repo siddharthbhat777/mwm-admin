@@ -17,31 +17,29 @@ function MultiSelectDropdown({ header, options, selectedOptions, handleSelection
   };
 
   return (
-    <div>
-      <div className={classes.multiselect}>
-        <div className={classes.selectBox} onClick={showCheckboxes}>
-          <select>
-            <option>{header}</option>
-          </select>
-          <div className={classes.overSelect}></div>
-        </div>
-        <div
-          id="checkboxes"
-          className={classes.checkboxes}
-          style={{ display: expanded ? "block" : "none" }}
-        >
-          {options.map((option, index) => (
-            <label key={index} htmlFor={option}>
-              <input
-                type="checkbox"
-                id={option._id}
-                checked={selectedOptions.includes(option._id)}
-                onChange={() => handleCheckboxChange(option._id)}
-              />{" "}
-              {option[labelKey]}
-            </label>
-          ))}
-        </div>
+    <div className={classes.multiselect}>
+      <div className={classes.selectBox} onClick={showCheckboxes}>
+        <select>
+          <option>{header}</option>
+        </select>
+        <div className={classes.overSelect}></div>
+      </div>
+      <div
+        id="checkboxes"
+        className={classes.checkboxes}
+        style={{ display: expanded ? "block" : "none" }}
+      >
+        {options.map((option, index) => (
+          <label key={index} htmlFor={option}>
+            <input
+              type="checkbox"
+              id={option._id}
+              checked={selectedOptions.includes(option._id)}
+              onChange={() => handleCheckboxChange(option._id)}
+            />{" "}
+            {option[labelKey]}
+          </label>
+        ))}
       </div>
     </div>
   );
