@@ -135,7 +135,7 @@ const Users = () => {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            await axios.post('https://localhost:5000/api/auth/upload-file', formData, {
+            await axios.post('https://mwm.met.edu/api/auth/upload-file', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
