@@ -78,7 +78,7 @@
 }
 
 .profileContainer {
-    background-color: var(--light-component-hover-color);
+    background-color: var(--dark-gray-color);
     border-radius: 1rem;
     box-shadow: #06182c66 0rem 0rem 0rem 0.125rem, #06182ca6 0rem 0.25rem 0.375rem -0.063rem, #ffffff14 0rem 0.063rem 0rem inset;
     position: absolute;
