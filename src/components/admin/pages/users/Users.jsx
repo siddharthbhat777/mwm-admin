@@ -359,6 +359,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const [programme, setProgramme] = useState('');
     const [institute, setInstitute] = useState('');
     const [year, setYear] = useState('');
+    const [type, setType] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [deleteId] = useState(detailsData._id);
 
@@ -422,12 +423,17 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
         setYear(value);
     };
 
+    const handleUserTypeSelect = (value) => {
+        setType(value);
+    };
+
     const handleEditChanges = async (id) => {
         const data = {
             firstname: firstnameRef.current.value,
             middlename: middlenameRef.current.value,
             lastname: lastnameRef.current.value,
             gr_no: grNumberRef.current.value,
+            type: type,
             institute: institute,
             programme: programme,
             year: year,
@@ -483,6 +489,15 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                                 <input type='text' size={13} className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='GR Number' defaultValue={detailsData.gr_no} ref={grNumberRef} />
                                 :
                                 <data>{detailsData.gr_no}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Type: </header>
+                        {
+                            editMode ?
+                                <CustomDropdown defaultText={detailsData.type} options={[ 'staff', 'student' ]} onSelect={handleUserTypeSelect} />
+                                :
+                                <data>{detailsData.type}</data>
                         }
                     </div>
                     <div className={classes.flexBr}>
