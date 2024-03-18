@@ -7,6 +7,7 @@ import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
 
 const Category = () => {
     const categoryNameRef = useRef();
+    const categorySvgRef = useRef();
 
     const [showLoader, setShowLoader] = useState(false);
     const [refreshList, setRefreshList] = useState(false);
@@ -109,7 +110,10 @@ const Category = () => {
 
     const handleAddCategory = async () => {
         try {
-            await axios.post('https://mwm.met.edu/api/categories/add', { category_name: categoryNameRef.current.value });
+            const formData = new FormData();
+            formData.append('category_name', categoryNameRef.current.value);
+            formData.append('icon', categorySvgRef.current.files[0]);
+            await axios.post('https://mwm.met.edu/api/categories/add', formData);
             setOpenAddContent(false);
             setRefreshList(true);
         } catch (error) {
@@ -140,6 +144,7 @@ const Category = () => {
                     openAddContent ?
                         <div className={classes.addContentLayout}>
                             <input className={classes.addContentInput} type="text" placeholder='Category name' ref={categoryNameRef} />
+                            <input className={classes.addContentFileInput} type="file" placeholder='Category svg' ref={categorySvgRef} />
                             <button className={classes.addContentSubmit} onClick={handleAddCategory}>Add</button>
                             <button className={classes.addContentCancel} onClick={() => setOpenAddContent(false)}>Cancel</button>
                         </div>
