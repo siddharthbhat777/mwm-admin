@@ -8,6 +8,7 @@ import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
 const Category = () => {
     const categoryNameRef = useRef();
     const categorySvgRef = useRef();
+    const categoryEditSvgRef = useRef();
 
     const [showLoader, setShowLoader] = useState(false);
     const [refreshList, setRefreshList] = useState(false);
@@ -123,7 +124,10 @@ const Category = () => {
 
     const handleEditCategory = async (id) => {
         try {
-            await axios.put(`https://mwm.met.edu/api/categories/update-categories/${id}`, { category_name: updatedCategoryName });
+            const formData = new FormData();
+            formData.append('category_name', updatedCategoryName);
+            formData.append('icon', categoryEditSvgRef.current.files[0]);
+            await axios.put(`https://mwm.met.edu/api/categories/update-categories/${id}`, formData);
             setOpenEditLayout(false);
             setRefreshList(true);
         } catch (error) {
@@ -195,7 +199,8 @@ const Category = () => {
                                 {
                                     openEditLayout && (openEditLayout === category._id) ?
                                         <div className={classes.editContentLayout}>
-                                            <input className={classes.editContentInput} type="text" placeholder='Artist name' defaultValue={category.category_name} onChange={(e) => setUpdatedCategoryName(e.target.value)} />
+                                            <input className={classes.editContentInput} type="text" placeholder='Category name' defaultValue={category.category_name} onChange={(e) => setUpdatedCategoryName(e.target.value)} />
+                                            <input className={classes.editContentFileInput} type="file" placeholder='Category svg' ref={categoryEditSvgRef} />
                                             <button className={classes.editContentSubmit} onClick={() => handleEditCategory(category._id)}>Edit</button>
                                             <button className={classes.editContentCancel} onClick={() => setOpenEditLayout(null)}>Cancel</button>
                                         </div>
