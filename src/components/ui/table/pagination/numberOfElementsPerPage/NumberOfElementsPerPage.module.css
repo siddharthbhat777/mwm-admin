@@ -49,9 +49,3 @@
 .dropdown li:hover {
     background-color: var(--light-component-color);
 }
-
-@media screen and (max-height: 740px) {
-    .rowNumber {
-        height: 1.5rem;
-    }
-}
