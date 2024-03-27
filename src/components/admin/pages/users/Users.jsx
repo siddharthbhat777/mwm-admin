@@ -233,7 +233,8 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 
     const [programme, setProgramme] = useState('');
     const [institute, setInstitute] = useState('');
-    const [year, setYear] = useState('');
+    const [startYear, setStartYear] = useState('');
+    const [endYear, setEndYear] = useState('');
     const [type, setType] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState(null);
@@ -260,8 +261,12 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         setInstitute(value);
     };
 
-    const handleYearSelect = (value) => {
-        setYear(value);
+    const handleStartYearSelect = (value) => {
+        setStartYear(value);
+    };
+
+    const handleEndYearSelect = (value) => {
+        setEndYear(value);
     };
 
     const handleTypeSelect = (value) => {
@@ -275,7 +280,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
             middlename: middlenameRef.current.value,
             lastname: lastnameRef.current.value,
             gr_no: grNumberRef.current.value,
-            year: year,
+            year: `${startYear}-${endYear}`,
             type: type,
             email: emailRef.current.value,
             institute: institute,
@@ -339,7 +344,8 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                         <CustomDropdown defaultText={'Programme'} options={programmeDropdownOptions} onSelect={handleProgrammeSelect} />{/* Dropdown */}
                     </div>
                     <div className={classes.formRowContainer} style={{ zIndex: 1 }}>
-                        <CustomDropdown defaultText={'Year'} options={yearsDropdownOptions} onSelect={handleYearSelect} />{/* Dropdown */}
+                        <CustomDropdown defaultText={'Start year'} options={yearsDropdownOptions} onSelect={handleStartYearSelect} />{/* Dropdown */}
+                        <CustomDropdown defaultText={'End year'} options={yearsDropdownOptions} onSelect={handleEndYearSelect} />{/* Dropdown */}
                     </div>
                     <button type='submit' className={classes.createButton}>Create</button>
                 </form>
@@ -358,10 +364,12 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const [editMode, setEditMode] = useState(false);
     const [programme, setProgramme] = useState('');
     const [institute, setInstitute] = useState('');
-    const [year, setYear] = useState('');
+    const [startYear, setStartYear] = useState('');
+    const [endYear, setEndYear] = useState('');
     const [type, setType] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [deleteId] = useState(detailsData._id);
+    console.log(detailsData);
 
     const handleCloseAlert = () => {
         setShowAlert(false);
@@ -419,8 +427,12 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
         setInstitute(value);
     };
 
-    const handleYearSelect = (value) => {
-        setYear(value);
+    const handleStartYearSelect = (value) => {
+        setStartYear(value);
+    };
+
+    const handleEndYearSelect = (value) => {
+        setEndYear(value);
     };
 
     const handleUserTypeSelect = (value) => {
@@ -436,7 +448,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
             type: type,
             institute: institute,
             programme: programme,
-            year: year,
+            year: `${startYear}-${endYear}`,
             email: emailRef.current.value
         };
         try {
@@ -522,7 +534,10 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>Year: </header>
                         {
                             editMode ?
-                                <CustomDropdown defaultText={detailsData.year} options={yearsDropdownOptions} onSelect={handleYearSelect} />
+                                <Fragment>
+                                    <CustomDropdown defaultText={detailsData.year.split('-')[0]} options={yearsDropdownOptions} onSelect={handleStartYearSelect} />
+                                    <CustomDropdown defaultText={detailsData.year.split('-')[1]} options={yearsDropdownOptions} onSelect={handleEndYearSelect} />
+                                </Fragment>
                                 :
                                 <data>{detailsData.year}</data>
                         }
