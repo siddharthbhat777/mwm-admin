@@ -275,19 +275,33 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 
     const handleCreateSubmit = async (event) => {
         event.preventDefault();
+        const toSentenceCase = (str) => {
+            return str.toLowerCase().replace(/(?:^|\s)\w/g, (match) => match.toUpperCase());
+        };
         const data = {
-            firstname: firstnameRef.current.value,
-            middlename: middlenameRef.current.value,
-            lastname: lastnameRef.current.value,
+            firstname: toSentenceCase(firstnameRef.current.value),
+            middlename: toSentenceCase(middlenameRef.current.value),
+            lastname: toSentenceCase(lastnameRef.current.value),
             gr_no: grNumberRef.current.value,
-            year: `${startYear}-${endYear}`,
+            year: (startYear.length !== 0 && endYear.length !== 0) ? `${startYear}-${endYear}` : '',
             type: type,
             email: emailRef.current.value,
             institute: institute,
             programme: programme
         };
         try {
-            if (!firstnameRef.current.value) {
+            if (
+                !firstnameRef.current.value ||
+                !middlenameRef.current.value ||
+                !lastnameRef.current.value ||
+                type.length === 0 ||
+                !grNumberRef.current.value ||
+                !emailRef.current.value ||
+                institute.length === 0 ||
+                programme.length === 0 ||
+                startYear.length === 0 ||
+                endYear.length === 0
+            ) {
                 const error = new Error('Please enter required field');
                 error.statusCode = 422;
                 throw error;
@@ -337,7 +351,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                     </div>
                     <div className={classes.formRowContainer}>
                         <input type='text' size={13} className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='GR Number' ref={grNumberRef} />
-                        <input type='email' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='E-Mail' ref={emailRef} />
+                        <input type='email' pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='E-Mail' ref={emailRef} />
                     </div>
                     <div className={classes.formRowContainer} style={{ zIndex: 2 }}>
                         <CustomDropdown defaultText={'Institute'} options={instituteDropdownOptions} onSelect={handleInstituteSelect} />{/* Dropdown */}
@@ -369,7 +383,6 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const [type, setType] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [deleteId] = useState(detailsData._id);
-    console.log(detailsData);
 
     const handleCloseAlert = () => {
         setShowAlert(false);
@@ -440,15 +453,18 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     };
 
     const handleEditChanges = async (id) => {
+        const toSentenceCase = (str) => {
+            return str.toLowerCase().replace(/(?:^|\s)\w/g, (match) => match.toUpperCase());
+        };
         const data = {
-            firstname: firstnameRef.current.value,
-            middlename: middlenameRef.current.value,
-            lastname: lastnameRef.current.value,
+            firstname: toSentenceCase(firstnameRef.current.value),
+            middlename: toSentenceCase(middlenameRef.current.value),
+            lastname: toSentenceCase(lastnameRef.current.value),
             gr_no: grNumberRef.current.value,
             type: type,
             institute: institute,
             programme: programme,
-            year: `${startYear}-${endYear}`,
+            year: (startYear.length !== 0 && endYear.length !== 0) ? `${startYear}-${endYear}` : '',
             email: emailRef.current.value
         };
         try {
@@ -507,7 +523,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>Type: </header>
                         {
                             editMode ?
-                                <CustomDropdown defaultText={detailsData.type} options={[ 'staff', 'student' ]} onSelect={handleUserTypeSelect} />
+                                <CustomDropdown defaultText={detailsData.type} options={['staff', 'student']} onSelect={handleUserTypeSelect} />
                                 :
                                 <data>{detailsData.type}</data>
                         }
