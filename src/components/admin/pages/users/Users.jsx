@@ -141,6 +141,21 @@ const Users = () => {
                 }
             });
             setRefreshList(true);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Imported data successfully"
+              });
         } catch (error) {
             console.error(error.message);
         }
@@ -395,6 +410,21 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                 setShowAlert(false);
                 setOpenDetails(false);
                 setRefreshList(true);
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.onmouseenter = Swal.stopTimer;
+                      toast.onmouseleave = Swal.resumeTimer;
+                    }
+                  });
+                  Toast.fire({
+                    icon: "success",
+                    title: "Created user data successfully"
+                  });
             } catch (error) {
                 console.log(error.message);
             }
@@ -472,6 +502,21 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
             setEditMode(false);
             setOpenDetails(false);
             setRefreshList(true);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Edited user data successfully"
+              });
         } catch (error) {
             console.log(error.message);
         }
