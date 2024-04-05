@@ -10,6 +10,7 @@ import CustomDropdown from '../../../ui/customDropdown/CustomDropdown';
 // import { usersList } from '../../../../utils/dummydata';
 import axios from 'axios';
 import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
+import Swal from 'sweetalert2';
 
 const Users = () => {
     const location = useLocation();
@@ -148,14 +149,14 @@ const Users = () => {
                 timer: 3000,
                 timerProgressBar: true,
                 didOpen: (toast) => {
-                  toast.onmouseenter = Swal.stopTimer;
-                  toast.onmouseleave = Swal.resumeTimer;
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
                 }
-              });
-              Toast.fire({
+            });
+            Toast.fire({
                 icon: "success",
                 title: "Imported data successfully"
-              });
+            });
         } catch (error) {
             console.error(error.message);
         }
@@ -324,9 +325,24 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
             await axios.post('https://mwm.met.edu/api/auth/register', data);
             setRefreshList(true);
             setOpenCreate(false);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "success",
+                title: "Created user data successfully"
+            });
         } catch (error) {
             if (error.response) {
-                if (error.response.status === 409) {
+                if (error.response.status === 409 || error.response.status === 400) {
                     handleShowAlert('Invalid input', error.response.data.message);
                 } else if (error.response.status === 500) {
                     handleShowAlert('Server error', 'Something went wrong');
@@ -384,23 +400,34 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 };
 
 const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
-    const firstnameRef = useRef();
-    const middlenameRef = useRef();
-    const lastnameRef = useRef();
-    const grNumberRef = useRef();
-    const emailRef = useRef();
+    const firstnameRef = useRef(detailsData.firstname);
+    const middlenameRef = useRef(detailsData.middlename);
+    const lastnameRef = useRef(detailsData.lastname);
+    const grNumberRef = useRef(detailsData.gr_no);
+    const emailRef = useRef(detailsData.email);
 
     const [editMode, setEditMode] = useState(false);
-    const [programme, setProgramme] = useState('');
-    const [institute, setInstitute] = useState('');
-    const [startYear, setStartYear] = useState('');
-    const [endYear, setEndYear] = useState('');
-    const [type, setType] = useState('');
+    const [programme, setProgramme] = useState(detailsData.programme);
+    const [institute, setInstitute] = useState(detailsData.institute);
+    const [startYear, setStartYear] = useState(detailsData.year.split('-')[0]);
+    const [endYear, setEndYear] = useState(detailsData.year.split('-')[1]);
+    const [type, setType] = useState(detailsData.type);
     const [showAlert, setShowAlert] = useState(false);
+    const [showOKAlert, setShowOKAlert] = useState(false);
     const [deleteId] = useState(detailsData._id);
+    const [alertMessage, setAlertMessage] = useState(null);
 
     const handleCloseAlert = () => {
         setShowAlert(false);
+    };
+
+    const handleOKCloseAlert = () => {
+        setShowOKAlert(false);
+    };
+
+    const handleShowAlert = (header, submessage) => {
+        setAlertMessage({ header: header, submessage: submessage });
+        setShowOKAlert(true);
     };
 
     const handleSubmitAlert = async () => {
@@ -417,14 +444,14 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                     timer: 3000,
                     timerProgressBar: true,
                     didOpen: (toast) => {
-                      toast.onmouseenter = Swal.stopTimer;
-                      toast.onmouseleave = Swal.resumeTimer;
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
                     }
-                  });
-                  Toast.fire({
+                });
+                Toast.fire({
                     icon: "success",
-                    title: "Created user data successfully"
-                  });
+                    title: "Deleted user data successfully"
+                });
             } catch (error) {
                 console.log(error.message);
             }
@@ -477,28 +504,44 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const handleEndYearSelect = (value) => {
         setEndYear(value);
     };
-
+    
     const handleUserTypeSelect = (value) => {
         setType(value);
     };
-
+    
     const handleEditChanges = async (id) => {
         const toSentenceCase = (str) => {
             return str.toLowerCase().replace(/(?:^|\s)\w/g, (match) => match.toUpperCase());
         };
-        const data = {
-            firstname: toSentenceCase(firstnameRef.current.value),
-            middlename: toSentenceCase(middlenameRef.current.value),
-            lastname: toSentenceCase(lastnameRef.current.value),
-            gr_no: grNumberRef.current.value,
-            type: type,
-            institute: institute,
-            programme: programme,
-            year: (startYear.length !== 0 && endYear.length !== 0) ? `${startYear}-${endYear}` : '',
-            email: emailRef.current.value
-        };
         try {
-            await axios.put(`https://mwm.met.edu/api/auth/update-user/${id}`, data)
+            if (
+                !firstnameRef.current.value ||
+                !middlenameRef.current.value ||
+                !lastnameRef.current.value ||
+                type.length === 0 ||
+                !grNumberRef.current.value ||
+                !emailRef.current.value ||
+                institute.length === 0 ||
+                programme.length === 0 ||
+                startYear.length === 0 ||
+                endYear.length === 0
+                ) {
+                    const error = new Error('Please enter required field');
+                    error.statusCode = 422;
+                    throw error;
+                }
+                const data = {
+                    firstname: toSentenceCase(firstnameRef.current.value),
+                    middlename: toSentenceCase(middlenameRef.current.value),
+                    lastname: toSentenceCase(lastnameRef.current.value),
+                    gr_no: grNumberRef.current.value,
+                    type: type,
+                    institute: institute,
+                    programme: programme,
+                    year: (startYear.length !== 0 && endYear.length !== 0) ? `${startYear}-${endYear}` : '',
+                    email: emailRef.current.value
+                };
+                await axios.put(`https://mwm.met.edu/api/auth/update-user/${id}`, data)
             setEditMode(false);
             setOpenDetails(false);
             setRefreshList(true);
@@ -509,16 +552,30 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                 timer: 3000,
                 timerProgressBar: true,
                 didOpen: (toast) => {
-                  toast.onmouseenter = Swal.stopTimer;
-                  toast.onmouseleave = Swal.resumeTimer;
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
                 }
-              });
-              Toast.fire({
+            });
+            Toast.fire({
                 icon: "success",
                 title: "Edited user data successfully"
-              });
+            });
         } catch (error) {
-            console.log(error.message);
+            if (error.response) {
+                if (error.response.status === 409 || error.response.status === 400) {
+                    handleShowAlert('Invalid input', error.response.data.message);
+                } else if (error.response.status === 500) {
+                    handleShowAlert('Server error', 'Something went wrong');
+                } else {
+                    console.log(error.message);
+                }
+            } else {
+                if (error.statusCode === 422) {
+                    handleShowAlert('Invalid input', error.message);
+                } else {
+                    console.log(error.message);
+                }
+            }
         }
     };
 
@@ -529,6 +586,10 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.2 }} className={classes.detailsViewContainer}>
             <div className={classes.detailsContainer}>
+                {
+                    showOKAlert &&
+                    <OKAlert message={alertMessage} onClose={handleOKCloseAlert} />
+                }
                 {showAlert && <YesNoAlert message={{ header: 'Delete', submessage: 'Do you really want to delete?' }} onClose={handleCloseAlert} onSubmit={handleSubmitAlert} />}
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.closeButtonContainer} onClick={() => setOpenDetails(false)}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
