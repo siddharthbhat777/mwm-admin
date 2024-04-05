@@ -199,6 +199,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const [tags, setTags] = useState([]);
     const [artists, setArtists] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [thumbnail, setThumbnail] = useState(null);
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
@@ -207,6 +208,22 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 
     const handleCloseAlert = () => {
         setShowAlert(false);
+    };
+
+    const handleThumbnailUpload = (event) => {
+        const uploadedThumbnail = event.target.files[0];
+        setThumbnail(uploadedThumbnail);
+        const img = new Image();
+        img.onload = function () {
+            const ratio = img.width / img.height;
+            const requiredRatio = 1280 / 720;
+            if (ratio !== requiredRatio) {
+                handleShowAlert('Invalid input', 'Required file ratio is 16:9');
+                thumbnailRef.current.value = null;
+                setThumbnail(null);
+            }
+        };
+        img.src = URL.createObjectURL(uploadedThumbnail);
     };
 
     useEffect(() => {
@@ -226,32 +243,40 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     }, []);
 
     const handleCreateSubmit = async () => {
-        const formData = new FormData();
-        formData.append('title', titleRef.current.value);
-        selectedArtistsOptions.forEach(artist => {
-            formData.append('artists', artist);
-        });
-        formData.append('file', fileRef.current.files[0]);
-        formData.append('thumbnail', thumbnailRef.current.files[0]);
-        formData.append('category', selectedCategory);
-        formData.append('lyricist', lyricistRef.current.value);
-        formData.append('album', albumRef.current.value);
-        formData.append('director', directorRef.current.value);
-        tags.forEach(tag => {
-            formData.append('tags', tag);
-        });
         try {
-            if (!titleRef.current.value) {
+            if (
+                !titleRef.current.value ||
+                !fileRef.current.files[0] ||
+                !thumbnail ||
+                selectedCategory.length === 0 ||
+                !lyricistRef.current.value ||
+                !albumRef.current.value ||
+                !directorRef.current.value
+            ) {
                 const error = new Error('Please enter required field');
                 error.statusCode = 422;
                 throw error;
             }
+            const formData = new FormData();
+            formData.append('title', titleRef.current.value);
+            selectedArtistsOptions.forEach(artist => {
+                formData.append('artists', artist);
+            });
+            formData.append('file', fileRef.current.files[0]);
+            formData.append('thumbnail', thumbnail);
+            formData.append('category', selectedCategory);
+            formData.append('lyricist', lyricistRef.current.value);
+            formData.append('album', albumRef.current.value);
+            formData.append('director', directorRef.current.value);
+            tags.forEach(tag => {
+                formData.append('tags', tag);
+            });
             await axios.post('https://mwm.met.edu/api/media/add', formData);
             setRefreshList(true);
             setOpenCreate(false);
         } catch (error) {
             if (error.response) {
-                if (error.response.status === 409) {
+                if (error.response.status === 409 || error.response.status === 400) {
                     handleShowAlert('Invalid input', error.response.data.message);
                 } else if (error.response.status === 500) {
                     handleShowAlert('Server error', 'Something went wrong');
@@ -304,7 +329,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                         <span className={classes.createFieldHeader}>Media file: </span><input type='file' className={`${classes.formInput} ${classes.mediumInputSize}`} ref={fileRef} />
                     </div>
                     <div className={classes.formRowContainer}>
-                        <span className={classes.createFieldHeader}>Thumbnail: </span><input type='file' className={`${classes.formInput} ${classes.mediumInputSize}`} ref={thumbnailRef} />
+                        <span className={classes.createFieldHeader}>Thumbnail: </span><input type='file' className={`${classes.formInput} ${classes.mediumInputSize}`} onChange={handleThumbnailUpload} ref={thumbnailRef} />
                     </div>
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Lyricist' ref={lyricistRef} />
@@ -336,10 +361,38 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const [director, setDirector] = useState(detailsData.director);
     const [tags, setTags] = useState(detailsData.tags);
     const [showAlert, setShowAlert] = useState(false);
+    const [showOkAlert, setShowOkAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState(null);
     const [deleteId] = useState(detailsData._id);
+    const [thumbnail, setThumbnail] = useState(detailsData.thumbnail);
+
+    const handleShowAlert = (header, submessage) => {
+        setAlertMessage({ header: header, submessage: submessage });
+        setShowOkAlert(true);
+    };
 
     const handleCloseAlert = () => {
         setShowAlert(false);
+    };
+
+    const handleCloseOKAlert = () => {
+        setShowOkAlert(false);
+    };
+
+    const handleThumbnailUpload = (event) => {
+        const uploadedThumbnail = event.target.files[0];
+        setThumbnail(uploadedThumbnail);
+        const img = new Image();
+        img.onload = function () {
+            const ratio = img.width / img.height;
+            const requiredRatio = 1280 / 720;
+            if (ratio !== requiredRatio) {
+                handleShowAlert('Invalid input', 'Required file ratio is 16:9');
+                thumbnailRef.current.value = null;
+                setThumbnail(null);
+            }
+        };
+        img.src = URL.createObjectURL(uploadedThumbnail);
     };
 
     const handleSubmitAlert = async () => {
@@ -406,26 +459,41 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     };
 
     const handleEditSubmit = async (id) => {
-        const formData = new FormData();
-        formData.append('title', title);
-        selectedArtistsOptions.forEach(artist => {
-            formData.append('artists', artist);
-        });
-        formData.append('file', fileRef.current.files[0]);
-        formData.append('thumbnail', thumbnailRef.current.files[0]);
-        formData.append('category', selectedCategory);
-        formData.append('lyricist', lyricist);
-        formData.append('album', album);
-        formData.append('director', director);
-        tags.forEach(tag => {
-            formData.append('tags', tag);
-        });
         try {
+            const formData = new FormData();
+            formData.append('title', title);
+            selectedArtistsOptions.forEach(artist => {
+                formData.append('artists', artist);
+            });
+            formData.append('file', fileRef.current.files[0]);
+            formData.append('thumbnail', thumbnail);
+            formData.append('category', selectedCategory);
+            formData.append('lyricist', lyricist);
+            formData.append('album', album);
+            formData.append('director', director);
+            tags.forEach(tag => {
+                formData.append('tags', tag);
+            });
             await axios.put(`https://mwm.met.edu/api/media/update/${id}`, formData)
             setOpenDetails(false);
             setRefreshList(true);
         } catch (error) {
-            console.log(error.message);
+
+            if (error.response) {
+                if (error.response.status === 409 || error.response.status === 400) {
+                    handleShowAlert('Invalid input', error.response.data.message);
+                } else if (error.response.status === 500) {
+                    handleShowAlert('Server error', 'Something went wrong');
+                } else {
+                    console.log(error.message);
+                }
+            } else {
+                if (error.statusCode === 422) {
+                    handleShowAlert('Invalid input', error.message);
+                } else {
+                    console.log(error.message);
+                }
+            }
         }
     };
 
@@ -440,6 +508,10 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.2 }} className={classes.detailsViewContainer}>
             <div className={classes.detailsContainer}>
+                {
+                    showOkAlert &&
+                    <OKAlert message={alertMessage} onClose={handleCloseOKAlert} />
+                }
                 {showAlert && <YesNoAlert message={{ header: 'Delete', submessage: 'Do you really want to delete?' }} onClose={handleCloseAlert} onSubmit={handleSubmitAlert} />}
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className={classes.closeButtonContainer} onClick={() => setOpenDetails(false)}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
@@ -484,7 +556,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>Thumbnail: </header>
                         {
                             editMode ?
-                                <input type='file' className={`${classes.formInput} ${classes.smallInputSize}`} ref={thumbnailRef} />
+                                <input type='file' className={`${classes.formInput} ${classes.smallInputSize}`} onChange={handleThumbnailUpload} ref={thumbnailRef} />
                                 :
                                 <data>{detailsData.thumbnail}</data>
                         }
@@ -493,7 +565,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>Category: </header>
                         {
                             editMode ?
-                            <ReturnKeyDropdown defaultText={'Category'} options={categories} onSelect={handleCategorySelect} />
+                                <ReturnKeyDropdown defaultText={'Category'} options={categories} onSelect={handleCategorySelect} />
                                 :
                                 <data>{detailsData.category.category_name}</data>
                         }
