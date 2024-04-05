@@ -190,6 +190,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const thumbnailRef = useRef();
     const lyricistRef = useRef();
     const directorRef = useRef();
+    const albumRef = useRef();
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState(null);
@@ -234,6 +235,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         formData.append('thumbnail', thumbnailRef.current.files[0]);
         formData.append('category', selectedCategory);
         formData.append('lyricist', lyricistRef.current.value);
+        formData.append('album', albumRef.current.value);
         formData.append('director', directorRef.current.value);
         tags.forEach(tag => {
             formData.append('tags', tag);
@@ -308,6 +310,9 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Lyricist' ref={lyricistRef} />
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Director' ref={directorRef} />
                     </div>
+                    <div className={classes.formRowContainer}>
+                        <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Album' ref={albumRef} />
+                    </div>
                     <TagsInput selectedTags={selectedTags} tagsInput={tags} header={'tags'} />
                     <button onClick={handleCreateSubmit} className={classes.createButton}>Create</button>
                 </div>
@@ -327,6 +332,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const [artists, setArtists] = useState([]);
     const [categories, setCategories] = useState([]);
     const [lyricist, setLyricist] = useState(detailsData.lyricist);
+    const [album, setAlbum] = useState(detailsData.album);
     const [director, setDirector] = useState(detailsData.director);
     const [tags, setTags] = useState(detailsData.tags);
     const [showAlert, setShowAlert] = useState(false);
@@ -409,6 +415,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
         formData.append('thumbnail', thumbnailRef.current.files[0]);
         formData.append('category', selectedCategory);
         formData.append('lyricist', lyricist);
+        formData.append('album', album);
         formData.append('director', director);
         tags.forEach(tag => {
             formData.append('tags', tag);
@@ -498,6 +505,15 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                                 <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Lyricist' defaultValue={detailsData.lyricist} onChange={(e) => setLyricist(e.target.value)} />
                                 :
                                 <data>{detailsData.lyricist}</data>
+                        }
+                    </div>
+                    <div className={classes.flexBr}>
+                        <header className={classes.detailsData}>Album: </header>
+                        {
+                            editMode ?
+                                <input type='text' className={`${classes.formInput} ${classes.smallerInputSize}`} placeholder='Album' defaultValue={detailsData.album} onChange={(e) => setAlbum(e.target.value)} />
+                                :
+                                <data>{detailsData.album}</data>
                         }
                     </div>
                     <div className={classes.flexBr}>
