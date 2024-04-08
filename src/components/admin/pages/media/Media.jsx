@@ -199,7 +199,6 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const [tags, setTags] = useState([]);
     const [artists, setArtists] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [thumbnail, setThumbnail] = useState(null);
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
@@ -208,22 +207,6 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 
     const handleCloseAlert = () => {
         setShowAlert(false);
-    };
-
-    const handleThumbnailUpload = (event) => {
-        const uploadedThumbnail = event.target.files[0];
-        setThumbnail(uploadedThumbnail);
-        const img = new Image();
-        img.onload = function () {
-            const ratio = img.width / img.height;
-            const requiredRatio = 1280 / 720;
-            if (ratio !== requiredRatio) {
-                handleShowAlert('Invalid input', 'Required file ratio is 16:9');
-                thumbnailRef.current.value = null;
-                setThumbnail(null);
-            }
-        };
-        img.src = URL.createObjectURL(uploadedThumbnail);
     };
 
     useEffect(() => {
@@ -246,8 +229,8 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         try {
             if (
                 !titleRef.current.value ||
-                !fileRef.current.files[0] ||
-                !thumbnail ||
+                !fileRef.current.value ||
+                !thumbnailRef.current.value ||
                 selectedCategory.length === 0 ||
                 !lyricistRef.current.value ||
                 !albumRef.current.value ||
@@ -262,8 +245,8 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
             selectedArtistsOptions.forEach(artist => {
                 formData.append('artists', artist);
             });
-            formData.append('file', fileRef.current.files[0]);
-            formData.append('thumbnail', thumbnail);
+            formData.append('file', fileRef.current.value);
+            formData.append('thumbnail', thumbnailRef.current.value);
             formData.append('category', selectedCategory);
             formData.append('lyricist', lyricistRef.current.value);
             formData.append('album', albumRef.current.value);
@@ -326,10 +309,10 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                         <ReturnKeyDropdown defaultText={'Category'} options={categories} onSelect={handleCategorySelect} />
                     </div>
                     <div className={classes.formRowContainer}>
-                        <span className={classes.createFieldHeader}>Media file: </span><input type='file' className={`${classes.formInput} ${classes.mediumInputSize}`} ref={fileRef} />
+                        <span className={classes.createFieldHeader}>Media file: </span><input type='text' required className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Media URL' ref={fileRef} />
                     </div>
                     <div className={classes.formRowContainer}>
-                        <span className={classes.createFieldHeader}>Thumbnail: </span><input type='file' className={`${classes.formInput} ${classes.mediumInputSize}`} onChange={handleThumbnailUpload} ref={thumbnailRef} />
+                        <span className={classes.createFieldHeader}>Thumbnail: </span><input type='text' required className={`${classes.formInput} ${classes.mediumInputSize}`} placeholder='Thumbnail URL' ref={thumbnailRef} />
                     </div>
                     <div className={classes.formRowContainer}>
                         <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Lyricist' ref={lyricistRef} />
@@ -347,15 +330,14 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 };
 
 const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
-    const fileRef = useRef();
-    const thumbnailRef = useRef();
-
+    console.log(detailsData);
     const [title, setTitle] = useState(detailsData.title);
     const [editMode, setEditMode] = useState(false);
     const [selectedArtistsOptions, setSelectedArtistsOptions] = useState(detailsData.artists.map(artist => artist._id));
     const [selectedCategory, setSelectedCategory] = useState('');
     const [artists, setArtists] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [file, setFile] = useState(detailsData.file_path)
     const [lyricist, setLyricist] = useState(detailsData.lyricist);
     const [album, setAlbum] = useState(detailsData.album);
     const [director, setDirector] = useState(detailsData.director);
@@ -377,22 +359,6 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
 
     const handleCloseOKAlert = () => {
         setShowOkAlert(false);
-    };
-
-    const handleThumbnailUpload = (event) => {
-        const uploadedThumbnail = event.target.files[0];
-        setThumbnail(uploadedThumbnail);
-        const img = new Image();
-        img.onload = function () {
-            const ratio = img.width / img.height;
-            const requiredRatio = 1280 / 720;
-            if (ratio !== requiredRatio) {
-                handleShowAlert('Invalid input', 'Required file ratio is 16:9');
-                thumbnailRef.current.value = null;
-                setThumbnail(null);
-            }
-        };
-        img.src = URL.createObjectURL(uploadedThumbnail);
     };
 
     const handleSubmitAlert = async () => {
@@ -465,7 +431,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
             selectedArtistsOptions.forEach(artist => {
                 formData.append('artists', artist);
             });
-            formData.append('file', fileRef.current.files[0]);
+            formData.append('file', file);
             formData.append('thumbnail', thumbnail);
             formData.append('category', selectedCategory);
             formData.append('lyricist', lyricist);
@@ -547,7 +513,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>Media file: </header>
                         {
                             editMode ?
-                                <input type='file' className={`${classes.formInput} ${classes.smallInputSize}`} ref={fileRef} />
+                                <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Media file' defaultValue={detailsData.file_path} onChange={(e) => setFile(e.target.value)} />
                                 :
                                 <data>{detailsData.file_path}</data>
                         }
@@ -556,7 +522,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>Thumbnail: </header>
                         {
                             editMode ?
-                                <input type='file' className={`${classes.formInput} ${classes.smallInputSize}`} onChange={handleThumbnailUpload} ref={thumbnailRef} />
+                                <input type='text' className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Thumbnail' defaultValue={detailsData.thumbnail} onChange={(e) => setThumbnail(e.target.value)} />
                                 :
                                 <data>{detailsData.thumbnail}</data>
                         }
