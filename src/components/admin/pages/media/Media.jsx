@@ -3,7 +3,6 @@ import classes from '../CommonPages.module.css';
 import { AnimatePresence, motion } from 'framer-motion';
 import Loader from '../../../ui/loader/Loader';
 import Table from '../../../ui/table/Table';
-import Pagination from '../../../ui/table/pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
 import MultiSelectDropdown from '../../../ui/customDropdown/multipleDropdown/MultiSelectDropdown';
@@ -11,30 +10,17 @@ import TagsInput from '../../../ui/tagsInput/TagsInput';
 import axios from 'axios';
 import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
 import ReturnKeyDropdown from '../../../ui/customDropdown/returnKeyDropdown/ReturnKeyDropdown';
+import AnimatedMulti from '../../../ui/customDropdown/animatedMulti/AnimatedMulti';
 
 const Media = () => {
     const location = useLocation();
     const [openCreate, setOpenCreate] = useState(false);
     const [openDetails, setOpenDetails] = useState(false);
     const [data, setData] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
     const [showLoader, setShowLoader] = useState(false);
     const [refreshList, setRefreshList] = useState(false);
     const [selectedRowData, setSelectedRowData] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [numberOfRows, setNumberOfRows] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
-
-    const totalPageCount = Math.ceil(filteredData.length / numberOfRows);
-
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
-
-    const handleRowsPerPage = (numberOfRows) => {
-        setNumberOfRows(parseInt(numberOfRows));
-        setCurrentPage(1);
-    };
 
     useEffect(() => {
         if (location.state) {
@@ -44,39 +30,39 @@ const Media = () => {
         }
     }, [location]);
 
-    useEffect(() => {
-        const filteredData = data.filter((requisition) => {
-            const searchFields = ['title', 'director', 'views_count', 'likes_count', 'dislikes_count'];
-            return searchFields.some((field) =>
-                String(requisition[field]).toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        });
-        if (filteredData.length !== 0) {
-            setFilteredData(filteredData);
-        } else {
-            if (searchQuery.length === 0) {
-                setFilteredData(data);
-            } else {
-                setFilteredData([]);
-            }
-        }
-    }, [data, searchQuery]);
+    // useEffect(() => {
+    //     const filteredData = data.filter((requisition) => {
+    //         const searchFields = ['title', 'director', 'views_count', 'likes_count', 'dislikes_count'];
+    //         return searchFields.some((field) =>
+    //             String(requisition[field]).toLowerCase().includes(searchQuery.toLowerCase())
+    //         );
+    //     });
+    //     if (filteredData.length !== 0) {
+    //         setFilteredData(filteredData);
+    //     } else {
+    //         if (searchQuery.length === 0) {
+    //             setFilteredData(data);
+    //         } else {
+    //             setFilteredData([]);
+    //         }
+    //     }
+    // }, [data, searchQuery]);
 
-    const startIndex = (currentPage - 1) * numberOfRows;
-    const endIndex = Math.min(startIndex + numberOfRows, data.length);
-    let displayedData;
-    if (window.innerWidth > 480) {
-        displayedData = filteredData.slice(startIndex, endIndex);
-    } else {
-        displayedData = filteredData;
-    }
+    // const startIndex = (currentPage - 1) * numberOfRows;
+    // const endIndex = Math.min(startIndex + numberOfRows, data.length);
+    // let displayedData;
+    // if (window.innerWidth > 480) {
+    //     displayedData = data.slice(startIndex, endIndex);
+    // } else {
+    //     displayedData = data;
+    // }
 
     useEffect(() => {
         const delay = 1000;
         setShowLoader(true);
         const gettingMedia = async () => {
             try {
-                const media = await axios.get('https://mwm.met.edu/api/media/all');
+                const media = await axios.get(`https://mwm.met.edu/api/media/search?query=${searchQuery}`);
                 setData(media.data.media);
             } catch (error) {
                 if (error.response) {
@@ -100,7 +86,7 @@ const Media = () => {
         return () => {
             clearTimeout(debounce);
         };
-    }, [refreshList]);
+    }, [refreshList, searchQuery]);
 
     const columns = [
         { field: 'title', header: 'Title' },
@@ -162,13 +148,13 @@ const Media = () => {
                             }
                             {
                                 !showLoader &&
-                                <Table rows={displayedData} columns={columns} isRowSelected={openDetails} selectedRow={handleSelectedRow} />
+                                <Table rows={data} columns={columns} isRowSelected={openDetails} selectedRow={handleSelectedRow} />
                             }
                         </div>
                         {window.innerWidth > 480 && <hr className={classes.tableDivideLine} />}
-                        <div className={classes.bottomContainer}>
-                            <Pagination rowsPerPage={handleRowsPerPage} startIndex={endIndex > 0 ? (startIndex + 1) : 0} endIndex={endIndex} numberOfRows={filteredData.length} currentPage={currentPage} totalPageCount={totalPageCount} onPageChange={handlePageChange} />
-                        </div>
+                        {/* <div className={classes.bottomContainer}>
+                            <NumberOfElementsPerPage rowsPerPage={handleRowsPerPage} />
+                        </div> */}
                     </div>
                 }
             </div>
@@ -199,6 +185,8 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const [tags, setTags] = useState([]);
     const [artists, setArtists] = useState([]);
     const [categories, setCategories] = useState([]);
+
+    const transformedData = artists.map(item => ({ value: item.name.toLowerCase().replace(/\s/g, ''), label: item.name }));
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
@@ -276,9 +264,9 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
         }
     };
 
-    const handleArtistsSelectionChange = (updatedOptions) => {
-        setSelectedArtistsOptions(updatedOptions);
-    };
+    // const handleArtistsSelectionChange = (updatedOptions) => {
+    //     setSelectedArtistsOptions(updatedOptions);
+    // };
 
     const selectedTags = tags => {
         setTags(tags);
@@ -286,6 +274,10 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 
     const handleCategorySelect = (value) => {
         setSelectedCategory(value);
+    };
+
+    const handleArtistSelect = (value) => {
+        setSelectedArtistsOptions(value);
     };
 
     return (
@@ -305,8 +297,11 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                         <input type='text' className={`${classes.formInput} ${classes.largeInputSize}`} placeholder='Title' ref={titleRef} />
                     </div>
                     <div className={classes.formRowContainer}>
-                        <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} labelKey={'name'} />
+                        {/* <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} labelKey={'name'} /> */}
                         <ReturnKeyDropdown defaultText={'Category'} options={categories} onSelect={handleCategorySelect} />
+                    </div>
+                    <div className={classes.formRowContainer}>
+                        <AnimatedMulti options={transformedData} onSelectChange={handleArtistSelect} />
                     </div>
                     <div className={classes.formRowContainer}>
                         <span className={classes.createFieldHeader}>Media file: </span><input type='text' required className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Media URL' ref={fileRef} />
