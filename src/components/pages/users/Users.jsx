@@ -1,15 +1,15 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import classes from '../CommonPages.module.css';
 import { AnimatePresence, motion } from 'framer-motion';
-import Loader from '../../../ui/loader/Loader';
-import Table from '../../../ui/table/Table';
-import Pagination from '../../../ui/table/pagination/Pagination';
+import Loader from '../../ui/loader/Loader';
+import Table from '../../ui/table/Table';
+import Pagination from '../../ui/table/pagination/Pagination';
 import { useLocation } from 'react-router-dom';
-import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
-import CustomDropdown from '../../../ui/customDropdown/CustomDropdown';
+import OKAlert from '../../ui/customAlert/okAlert/OKAlert';
+import CustomDropdown from '../../ui/customDropdown/CustomDropdown';
 // import { usersList } from '../../../../utils/dummydata';
 import axios from 'axios';
-import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
+import YesNoAlert from '../../ui/customAlert/yesNoAlert/YesNoAlert';
 import Swal from 'sweetalert2';
 
 const Users = () => {

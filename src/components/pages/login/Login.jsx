@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import classes from './Login.module.css';
 import { useNavigate } from 'react-router-dom';
-import metLogo from '../../../../assets/MET-logo.png';
-import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
+import metLogo from '../../../assets/MET-logo.png';
+import OKAlert from '../../ui/customAlert/okAlert/OKAlert';
 import ls from 'localstorage-slim';
 
 const Login = () => {
@@ -22,7 +22,7 @@ const Login = () => {
         if (usernameRef.current.value === 'mwmadmin' && passwordRef.current.value === 'admin') {
             ls.set('username', usernameRef.current.value, { encrypt: true });
             localStorage.setItem('userType', 'admin');
-            navigate('/admin');
+            navigate('/');
         } else {
             setShowAlert(true);
         }
@@ -31,7 +31,7 @@ const Login = () => {
     useEffect(() => {
         if (ls.get('username', { decrypt: true })) {
             if (localStorage.getItem('userType') === 'admin') {
-                navigate('/admin');
+                navigate('/');
             } else if (localStorage.getItem('userType') === 'others') {
                 navigate('/');
             }

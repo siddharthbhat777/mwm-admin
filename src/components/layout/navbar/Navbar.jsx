@@ -4,7 +4,7 @@ import Hamburger from 'hamburger-react'
 import { useNavigate } from 'react-router-dom';
 // import AuthContext from '../../../context/AuthContext/AuthContext';
 import ls from 'localstorage-slim';
-import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
+import YesNoAlert from '../../ui/customAlert/yesNoAlert/YesNoAlert';
 
 const Navbar = () => {
     // const authCtx = useContext(AuthContext);
@@ -25,32 +25,27 @@ const Navbar = () => {
     };
 
     const handleDashboard = () => {
-        navigate('/admin');
+        navigate('/');
         setIsMenuOpen(false);
     };
 
     const handleUsers = () => {
-        navigate('/admin/users');
+        navigate('/users');
         setIsMenuOpen(false);
     };
 
     const handleMedia = () => {
-        navigate('/admin/media');
-        setIsMenuOpen(false);
-    };
-
-    const handlePlaylist = () => {
-        navigate('/admin/playlist');
+        navigate('/media');
         setIsMenuOpen(false);
     };
 
     const handleCategory = () => {
-        navigate('/admin/category');
+        navigate('/category');
         setIsMenuOpen(false);
     };
 
     const handleArtist = () => {
-        navigate('/admin/artist');
+        navigate('/artist');
         setIsMenuOpen(false);
     };
 
@@ -115,16 +110,6 @@ const Navbar = () => {
                                 <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm6.258-6.437a.5.5 0 0 1 .507.013l4 2.5a.5.5 0 0 1 0 .848l-4 2.5A.5.5 0 0 1 6 12V7a.5.5 0 0 1 .258-.437" />
                             </svg>
                             <span>Media</span>
-                        </div>
-
-                        <div className={classes.menuItem} onClick={handlePlaylist}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-music-note-list" viewBox="0 0 16 16">
-                                <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2" />
-                                <path fillRule="evenodd" d="M12 3v10h-1V3z" />
-                                <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1z" />
-                                <path fillRule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5m0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5m0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5" />
-                            </svg>
-                            <span>Playlist</span>
                         </div>
 
                         <div className={classes.menuItem} onClick={handleCategory}>

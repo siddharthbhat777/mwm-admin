@@ -28,7 +28,7 @@
 
 
 .leftLayout {
-    background-image: url('../../../../assets/login-image.jpg');
+    background-image: url('../../../assets/login-image.jpg');
     background-repeat: no-repeat;
     background-position: left;
     background-size: cover;
@@ -85,10 +85,8 @@
     color: var(--dark-gray-color);
 }
 
-.alreadyRegistered {
-    cursor: pointer;
-    text-decoration: underline;
-    color: blue;
+.rememberMe {
+    margin-right: 1rem;
 }
 
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {

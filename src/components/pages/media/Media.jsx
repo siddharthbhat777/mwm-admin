@@ -1,16 +1,16 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import classes from '../CommonPages.module.css';
 import { AnimatePresence, motion } from 'framer-motion';
-import Loader from '../../../ui/loader/Loader';
-import Table from '../../../ui/table/Table';
+import Loader from '../../ui/loader/Loader';
+import Table from '../../ui/table/Table';
 import { useLocation } from 'react-router-dom';
-import OKAlert from '../../../ui/customAlert/okAlert/OKAlert';
-import MultiSelectDropdown from '../../../ui/customDropdown/multipleDropdown/MultiSelectDropdown';
-import TagsInput from '../../../ui/tagsInput/TagsInput';
+import OKAlert from '../../ui/customAlert/okAlert/OKAlert';
+import MultiSelectDropdown from '../../ui/customDropdown/multipleDropdown/MultiSelectDropdown';
+import TagsInput from '../../ui/tagsInput/TagsInput';
 import axios from 'axios';
-import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
-import ReturnKeyDropdown from '../../../ui/customDropdown/returnKeyDropdown/ReturnKeyDropdown';
-import AnimatedMulti from '../../../ui/customDropdown/animatedMulti/AnimatedMulti';
+import YesNoAlert from '../../ui/customAlert/yesNoAlert/YesNoAlert';
+import ReturnKeyDropdown from '../../ui/customDropdown/returnKeyDropdown/ReturnKeyDropdown';
+import AnimatedMulti from '../../ui/customDropdown/animatedMulti/AnimatedMulti';
 
 const Media = () => {
     const location = useLocation();

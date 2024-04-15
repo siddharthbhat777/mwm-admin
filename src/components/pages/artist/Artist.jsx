@@ -1,14 +1,15 @@
 import axios from 'axios';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import classes from '../CommonData.module.css';
-import Loader from '../../../ui/loader/Loader';
-import Pagination from '../../../ui/BasicPagination/Pagination';
-import YesNoAlert from '../../../ui/customAlert/yesNoAlert/YesNoAlert';
+import pageClasses from '../CommonPages.module.css';
+import Loader from '../../ui/loader/Loader';
+import Pagination from '../../ui/BasicPagination/Pagination';
+import YesNoAlert from '../../ui/customAlert/yesNoAlert/YesNoAlert';
+import Swal from 'sweetalert2';
 
-const Category = () => {
-    const categoryNameRef = useRef();
-    const categorySvgRef = useRef();
-    const categoryEditSvgRef = useRef();
+const Artist = () => {
+    const artistNameRef = useRef();
+    const fileInputRef = useRef();
 
     const [showLoader, setShowLoader] = useState(false);
     const [refreshList, setRefreshList] = useState(false);
@@ -19,7 +20,7 @@ const Category = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [openAddContent, setOpenAddContent] = useState(false);
     const [openEditLayout, setOpenEditLayout] = useState(null);
-    const [updatedCategoryName, setUpdatedCategoryName] = useState('');
+    const [updatedArtistName, setUpdatedArtistName] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [deleteId, setDeleteId] = useState();
 
@@ -30,7 +31,7 @@ const Category = () => {
     const handleSubmitAlert = async () => {
         if (deleteId.length !== 0) {
             try {
-                await axios.delete(`https://mwm.met.edu/api/categories/delete-categories/${deleteId}`);
+                await axios.delete(`https://mwm.met.edu/api/artists/delete/${deleteId}`);
                 setShowAlert(false);
                 setRefreshList(true);
             } catch (error) {
@@ -42,10 +43,10 @@ const Category = () => {
     useEffect(() => {
         const delay = 1000;
         setShowLoader(true);
-        const gettingCategories = async () => {
+        const gettingArtists = async () => {
             try {
-                const categories = await axios.get('https://mwm.met.edu/api/categories/all-categories');
-                setData(categories.data.categories);
+                const artists = await axios.get('https://mwm.met.edu/api/artists/all');
+                setData(artists.data.artists);
             } catch (error) {
                 if (error.response) {
                     if (error.response.status === 500) {
@@ -61,7 +62,7 @@ const Category = () => {
             }
         };
         const debounce = setTimeout(() => {
-            gettingCategories();
+            gettingArtists();
             setShowLoader(false);
         }, delay);
 
@@ -71,10 +72,10 @@ const Category = () => {
     }, [refreshList]);
 
     useEffect(() => {
-        const filteredData = data.filter((category) => {
-            const searchFields = ['category_name'];
+        const filteredData = data.filter((artist) => {
+            const searchFields = ['name'];
             return searchFields.some((field) =>
-                String(category[field]).toLowerCase().includes(searchQuery.toLowerCase())
+                String(artist[field]).toLowerCase().includes(searchQuery.toLowerCase())
             );
         });
         if (filteredData.length !== 0) {
@@ -109,12 +110,9 @@ const Category = () => {
         setCurrentPage(1);
     };
 
-    const handleAddCategory = async () => {
+    const handleAddArtist = async () => {
         try {
-            const formData = new FormData();
-            formData.append('category_name', categoryNameRef.current.value);
-            formData.append('icon', categorySvgRef.current.files[0]);
-            await axios.post('https://mwm.met.edu/api/categories/add', formData);
+            await axios.post('https://mwm.met.edu/api/artists/add', { name: artistNameRef.current.value });
             setOpenAddContent(false);
             setRefreshList(true);
         } catch (error) {
@@ -122,12 +120,9 @@ const Category = () => {
         }
     };
 
-    const handleEditCategory = async (id) => {
+    const handleEditArtist = async (id) => {
         try {
-            const formData = new FormData();
-            formData.append('category_name', updatedCategoryName);
-            formData.append('icon', categoryEditSvgRef.current.files[0]);
-            await axios.put(`https://mwm.met.edu/api/categories/update-categories/${id}`, formData);
+            await axios.put(`https://mwm.met.edu/api/artists/update/${id}`, { name: updatedArtistName });
             setOpenEditLayout(false);
             setRefreshList(true);
         } catch (error) {
@@ -140,6 +135,46 @@ const Category = () => {
         setShowAlert(true);
     };
 
+    const handleImportData = async () => {
+        try {
+            fileInputRef.current.click();
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            await axios.post('https://mwm.met.edu/api/artists/import', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setRefreshList(true);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "success",
+                title: "Imported data successfully"
+            });
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
     return (
         <div className={classes.fullscreen}>
             {showAlert && <YesNoAlert message={{ header: 'Delete', submessage: 'Do you really want to delete?' }} onClose={handleCloseAlert} onSubmit={handleSubmitAlert} />}
@@ -147,9 +182,8 @@ const Category = () => {
                 {
                     openAddContent ?
                         <div className={classes.addContentLayout}>
-                            <input className={classes.addContentInput} type="text" placeholder='Category name' ref={categoryNameRef} />
-                            <input className={classes.addContentFileInput} type="file" placeholder='Category svg' ref={categorySvgRef} />
-                            <button className={classes.addContentSubmit} onClick={handleAddCategory}>Add</button>
+                            <input className={classes.addContentInput} type="text" placeholder='Artist name' ref={artistNameRef} />
+                            <button className={classes.addContentSubmit} onClick={handleAddArtist}>Add</button>
                             <button className={classes.addContentCancel} onClick={() => setOpenAddContent(false)}>Cancel</button>
                         </div>
                         :
@@ -157,7 +191,7 @@ const Category = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
                                 <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
                             </svg>
-                            <span>Add Category</span>
+                            <span>Add Artist</span>
                         </button>
                 }
                 {
@@ -185,6 +219,21 @@ const Category = () => {
                             <input type='text' placeholder='Search here' className={classes.searchInput} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
                 }
+                <button className={classes.addContent} style={{ marginRight: '1rem' }} onClick={handleImportData}>
+                    <div className={pageClasses.createButtonContainer}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+                            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0" />
+                        </svg>
+                        <span>Import</span>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                            accept=".csv"
+                        />
+                    </div>
+                </button>
             </div>
             <div className={classes.mainSection}>
                 {
@@ -193,21 +242,20 @@ const Category = () => {
                 }
                 {
                     !showLoader &&
-                    displayedData.map((category) => (
-                        <div key={category._id} className={classes.singleEntry}>
+                    displayedData.map((artist) => (
+                        <div key={artist._id} className={classes.singleEntry}>
                             <div className={classes.heading}>
                                 {
-                                    openEditLayout && (openEditLayout === category._id) ?
+                                    openEditLayout && (openEditLayout === artist._id) ?
                                         <div className={classes.editContentLayout}>
-                                            <input className={classes.editContentInput} type="text" placeholder='Category name' defaultValue={category.category_name} onChange={(e) => setUpdatedCategoryName(e.target.value)} />
-                                            <input className={classes.editContentFileInput} type="file" placeholder='Category svg' ref={categoryEditSvgRef} />
-                                            <button className={classes.editContentSubmit} onClick={() => handleEditCategory(category._id)}>Edit</button>
+                                            <input className={classes.editContentInput} type="text" placeholder='Artist name' defaultValue={artist.name} onChange={(e) => setUpdatedArtistName(e.target.value)} />
+                                            <button className={classes.editContentSubmit} onClick={() => handleEditArtist(artist._id)}>Edit</button>
                                             <button className={classes.editContentCancel} onClick={() => setOpenEditLayout(null)}>Cancel</button>
                                         </div>
                                         :
                                         <Fragment>
-                                            <span className={classes.headingName}>{category.category_name}</span>
-                                            <div className={classes.editEntry} onClick={() => setOpenEditLayout(category._id)}>
+                                            <span className={classes.headingName}>{artist.name}</span>
+                                            <div className={classes.editEntry} onClick={() => setOpenEditLayout(artist._id)}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                     <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -216,7 +264,7 @@ const Category = () => {
                                         </Fragment>
                                 }
                             </div>
-                            <button className={classes.deleteButton} onClick={() => handleDeleteData(category._id)}>
+                            <button className={classes.deleteButton} onClick={() => handleDeleteData(artist._id)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
                                     <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
                                 </svg>
@@ -232,4 +280,4 @@ const Category = () => {
     );
 };
 
-export default Category;
+export default Artist;
