@@ -231,9 +231,9 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
             const formData = new FormData();
             formData.append('title', titleRef.current.value);
             selectedArtistsOptions.forEach(artist => {
-                formData.append('artists', artist);
+                formData.append('artists', artist.value);
             });
-            formData.append('file', fileRef.current.value);
+            formData.append('file_path', fileRef.current.value);
             formData.append('thumbnail', thumbnailRef.current.value);
             formData.append('category', selectedCategory);
             formData.append('lyricist', lyricistRef.current.value);
