@@ -5,7 +5,6 @@ import Loader from '../../ui/loader/Loader';
 import Table from '../../ui/table/Table';
 import { useLocation } from 'react-router-dom';
 import OKAlert from '../../ui/customAlert/okAlert/OKAlert';
-import MultiSelectDropdown from '../../ui/customDropdown/multipleDropdown/MultiSelectDropdown';
 import TagsInput from '../../ui/tagsInput/TagsInput';
 import axios from 'axios';
 import YesNoAlert from '../../ui/customAlert/yesNoAlert/YesNoAlert';
@@ -186,7 +185,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     const [artists, setArtists] = useState([]);
     const [categories, setCategories] = useState([]);
 
-    const transformedData = artists.map(item => ({ value: item.name.toLowerCase().replace(/\s/g, ''), label: item.name }));
+    const transformedData = artists.map(item => ({ value: item.name, label: item.name }));
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
@@ -301,7 +300,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
                         <ReturnKeyDropdown defaultText={'Category'} options={categories} onSelect={handleCategorySelect} />
                     </div>
                     <div className={classes.formRowContainer}>
-                        <AnimatedMulti options={transformedData} onSelectChange={handleArtistSelect} />
+                        <AnimatedMulti options={transformedData} placeholder={'Artists'} defaultValues={null} onSelectChange={handleArtistSelect} />
                     </div>
                     <div className={classes.formRowContainer}>
                         <span className={classes.createFieldHeader}>Media file: </span><input type='text' required className={`${classes.formInput} ${classes.smallInputSize}`} placeholder='Media URL' ref={fileRef} />
@@ -342,6 +341,9 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const [alertMessage, setAlertMessage] = useState(null);
     const [deleteId] = useState(detailsData._id);
     const [thumbnail, setThumbnail] = useState(detailsData.thumbnail);
+
+    const transformedData = artists.map(item => ({ value: item.name, label: item.name }));
+    const transformedSelectedData = detailsData.artists.map(item => ({ value: item.name, label: item.name }));
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
@@ -411,9 +413,9 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
         return `${formattedDate} ${formattedTime}`;
     };
 
-    const handleArtistsSelectionChange = (updatedOptions) => {
-        setSelectedArtistsOptions(updatedOptions);
-    };
+    // const handleArtistsSelectionChange = (updatedOptions) => {
+    //     setSelectedArtistsOptions(updatedOptions);
+    // };
 
     const selectedTags = tags => {
         setTags(tags);
@@ -424,7 +426,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
             const formData = new FormData();
             formData.append('title', title);
             selectedArtistsOptions.forEach(artist => {
-                formData.append('artists', artist);
+                formData.append('artists', artist.value);
             });
             formData.append('file', file);
             formData.append('thumbnail', thumbnail);
@@ -466,6 +468,10 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
         setSelectedCategory(value);
     };
 
+    const handleArtistSelect = (value) => {
+        setSelectedArtistsOptions(value);
+    };
+
     return (
         <motion.div initial={{ width: '0' }} animate={window.innerWidth > 480 ? { width: '60%' } : { width: '100%' }} exit={{ width: '0' }} transition={{ duration: 0.2 }} className={classes.detailsViewContainer}>
             <div className={classes.detailsContainer}>
@@ -499,7 +505,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
                         <header className={classes.detailsData}>Artists: </header>
                         {
                             editMode ?
-                                <MultiSelectDropdown header={'Artists'} options={artists} selectedOptions={selectedArtistsOptions} handleSelection={handleArtistsSelectionChange} labelKey={'name'} />
+                                <AnimatedMulti options={transformedData} placeholder={'Artists'} defaultValues={transformedSelectedData} onSelectChange={handleArtistSelect} />
                                 :
                                 <data>{detailsData.artists.map(artist => artist.name).toString()}</data>
                         }

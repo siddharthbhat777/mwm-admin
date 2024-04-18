@@ -4,8 +4,8 @@ import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();
 
-const AnimatedMulti = ({ options, onSelectChange }) => {
-    const [selectedValues, setSelectedValues] = useState([]);
+const AnimatedMulti = ({ placeholder, defaultValues, options, onSelectChange }) => {
+    const [selectedValues, setSelectedValues] = useState(defaultValues || []);
 
     const customStyles = {
         control: (provided) => ({
@@ -26,6 +26,7 @@ const AnimatedMulti = ({ options, onSelectChange }) => {
             value={selectedValues}
             onChange={handleSelectChange}
             isMulti
+            placeholder={placeholder}
             options={options}
             styles={customStyles}
         />
