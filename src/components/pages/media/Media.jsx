@@ -324,7 +324,6 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
 };
 
 const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
-    console.log(detailsData);
     const [title, setTitle] = useState(detailsData.title);
     const [editMode, setEditMode] = useState(false);
     const [selectedArtistsOptions, setSelectedArtistsOptions] = useState(detailsData.artists.map(artist => artist._id));
@@ -344,6 +343,10 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
 
     const transformedData = artists.map(item => ({ value: item.name, label: item.name }));
     const transformedSelectedData = detailsData.artists.map(item => ({ value: item.name, label: item.name }));
+
+    useEffect(() => {
+        setEditMode(false);
+    }, [detailsData, setOpenDetails]);
 
     const handleShowAlert = (header, submessage) => {
         setAlertMessage({ header: header, submessage: submessage });
