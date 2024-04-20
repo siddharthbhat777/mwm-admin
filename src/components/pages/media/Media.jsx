@@ -428,7 +428,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
             selectedArtistsOptions.forEach(artist => {
                 formData.append('artists', artist.value);
             });
-            formData.append('file', file);
+            formData.append('file_path', file);
             formData.append('thumbnail', thumbnail);
             formData.append('category', selectedCategory);
             formData.append('lyricist', lyricist);
