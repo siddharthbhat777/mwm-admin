@@ -20,7 +20,12 @@
     height: 2.5rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    text-align: start;
     transition: all 0.2s ease-in-out;
+}
+
+.mainTable tbody tr td {
+    padding-left: 1.875rem;
 }
 
 .mainTable tbody tr:hover {
