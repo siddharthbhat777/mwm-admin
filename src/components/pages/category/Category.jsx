@@ -30,7 +30,7 @@ const Category = () => {
     const handleSubmitAlert = async () => {
         if (deleteId.length !== 0) {
             try {
-                await axios.delete(`https://mwm.met.edu/api/categories/delete-categories/${deleteId}`);
+                await axios.delete(`http://mwm.met.edu/api/categories/delete-categories/${deleteId}`);
                 setShowAlert(false);
                 setRefreshList(true);
             } catch (error) {
@@ -44,7 +44,7 @@ const Category = () => {
         setShowLoader(true);
         const gettingCategories = async () => {
             try {
-                const categories = await axios.get('https://mwm.met.edu/api/categories/all-categories');
+                const categories = await axios.get('http://mwm.met.edu/api/categories/all-categories');
                 setData(categories.data.categories);
             } catch (error) {
                 if (error.response) {
@@ -114,7 +114,7 @@ const Category = () => {
             const formData = new FormData();
             formData.append('category_name', categoryNameRef.current.value);
             formData.append('icon', categorySvgRef.current.files[0]);
-            await axios.post('https://mwm.met.edu/api/categories/add', formData);
+            await axios.post('http://mwm.met.edu/api/categories/add', formData);
             setOpenAddContent(false);
             setRefreshList(true);
         } catch (error) {
@@ -127,7 +127,7 @@ const Category = () => {
             const formData = new FormData();
             formData.append('category_name', updatedCategoryName);
             formData.append('icon', categoryEditSvgRef.current.files[0]);
-            await axios.put(`https://mwm.met.edu/api/categories/update-categories/${id}`, formData);
+            await axios.put(`http://mwm.met.edu/api/categories/update-categories/${id}`, formData);
             setOpenEditLayout(false);
             setRefreshList(true);
         } catch (error) {

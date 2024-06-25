@@ -61,7 +61,7 @@ const Media = () => {
         setShowLoader(true);
         const gettingMedia = async () => {
             try {
-                const media = await axios.get(`https://mwm.met.edu/api/media/search?query=${searchQuery}`);
+                const media = await axios.get(`http://mwm.met.edu/api/media/search?query=${searchQuery}`);
                 setData(media.data.media);
             } catch (error) {
                 if (error.response) {
@@ -199,8 +199,8 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
     useEffect(() => {
         const getArtistCategories = async () => {
             try {
-                const artists = await axios.get('https://mwm.met.edu/api/artists/all');
-                const categories = await axios.get('https://mwm.met.edu/api/categories/all-categories');
+                const artists = await axios.get('http://mwm.met.edu/api/artists/all');
+                const categories = await axios.get('http://mwm.met.edu/api/categories/all-categories');
                 setArtists(artists.data.artists);
                 setCategories(categories.data.categories.map(category => {
                     return { key: category._id, name: category.category_name };
@@ -241,7 +241,7 @@ const CreateComponent = ({ setOpenCreate, setRefreshList }) => {
             tags.forEach(tag => {
                 formData.append('tags', tag);
             });
-            await axios.post('https://mwm.met.edu/api/media/add', formData);
+            await axios.post('http://mwm.met.edu/api/media/add', formData);
             setRefreshList(true);
             setOpenCreate(false);
         } catch (error) {
@@ -361,7 +361,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const handleSubmitAlert = async () => {
         if (deleteId.length !== 0) {
             try {
-                await axios.delete(`https://mwm.met.edu/api/media/${deleteId}`);
+                await axios.delete(`http://mwm.met.edu/api/media/${deleteId}`);
                 setShowAlert(false);
                 setOpenDetails(false);
                 setRefreshList(true);
@@ -374,8 +374,8 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     useEffect(() => {
         const getArtistCategories = async () => {
             try {
-                const artists = await axios.get('https://mwm.met.edu/api/artists/all');
-                const categories = await axios.get('https://mwm.met.edu/api/categories/all-categories');
+                const artists = await axios.get('http://mwm.met.edu/api/artists/all');
+                const categories = await axios.get('http://mwm.met.edu/api/categories/all-categories');
                 setArtists(artists.data.artists);
                 setCategories(categories.data.categories.map(category => {
                     return { key: category._id, name: category.category_name };
@@ -420,6 +420,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
     const selectedTags = tags => {
         setTags(tags);
     };
+    
 
     const handleEditSubmit = async (id) => {
         try {
@@ -437,7 +438,7 @@ const DetailsView = ({ setOpenDetails, detailsData, setRefreshList }) => {
             tags.forEach(tag => {
                 formData.append('tags', tag);
             });
-            await axios.put(`https://mwm.met.edu/api/media/update/${id}`, formData)
+            await axios.put(`http://mwm.met.edu/api/media/update/${id}`, formData)
             setOpenDetails(false);
             setRefreshList(true);
         } catch (error) {

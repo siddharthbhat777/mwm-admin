@@ -31,7 +31,7 @@ const Artist = () => {
     const handleSubmitAlert = async () => {
         if (deleteId.length !== 0) {
             try {
-                await axios.delete(`https://mwm.met.edu/api/artists/delete/${deleteId}`);
+                await axios.delete(`http://mwm.met.edu/api/artists/delete/${deleteId}`);
                 setShowAlert(false);
                 setRefreshList(true);
             } catch (error) {
@@ -45,7 +45,7 @@ const Artist = () => {
         setShowLoader(true);
         const gettingArtists = async () => {
             try {
-                const artists = await axios.get('https://mwm.met.edu/api/artists/all');
+                const artists = await axios.get('http://mwm.met.edu/api/artists/all');
                 setData(artists.data.artists);
             } catch (error) {
                 if (error.response) {
@@ -112,7 +112,7 @@ const Artist = () => {
 
     const handleAddArtist = async () => {
         try {
-            await axios.post('https://mwm.met.edu/api/artists/add', { name: artistNameRef.current.value });
+            await axios.post('http://mwm.met.edu/api/artists/add', { name: artistNameRef.current.value });
             setOpenAddContent(false);
             setRefreshList(true);
         } catch (error) {
@@ -122,7 +122,7 @@ const Artist = () => {
 
     const handleEditArtist = async (id) => {
         try {
-            await axios.put(`https://mwm.met.edu/api/artists/update/${id}`, { name: updatedArtistName });
+            await axios.put(`http://mwm.met.edu/api/artists/update/${id}`, { name: updatedArtistName });
             setOpenEditLayout(false);
             setRefreshList(true);
         } catch (error) {
@@ -149,7 +149,7 @@ const Artist = () => {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            await axios.post('https://mwm.met.edu/api/artists/import', formData, {
+            await axios.post('http://mwm.met.edu/api/artists/import', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
